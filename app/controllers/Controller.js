@@ -199,8 +199,8 @@ app.controller('RoomCategoryController', function($scope,$http,$rootScope){
 	$scope.RoomcatValidation = function (roomCategory){
 		if(roomCategory==undefined || roomCategory.name == undefined || 
 	roomCategory.description == undefined || roomCategory.week_days_price == undefined || roomCategory.weekend_price== undefined 
-	|| roomCategory.name == "" || 
-	roomCategory.description == "" || roomCategory.week_days_price == "" || roomCategory.weekend_price== "" 
+	|| roomCategory.room_id == undefined || roomCategory.name == "" || 
+	roomCategory.description == "" || roomCategory.week_days_price == "" || roomCategory.weekend_price== "" || roomCategory.room_id == ""
 	){
 	    	swal({
 	              title: 'Required Error!',
@@ -411,6 +411,8 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		  .then(function(response) {
 		    $scope.getIdMaster = response.data;
 		  }); 
+
+		  $scope.bookingflg = false;
 	}
 
 	$scope.form = [];
@@ -420,19 +422,33 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
     $scope.form1.start_date_v = new Date();
     $scope.form1.end_date_v = new Date();
 	$scope.dateValidation = function(){
-		$scope.form1.end_date_v = $scope.form1.start_date.setDate($scope.form1.start_date.getDate() + 1); 
+		$scope.form1.end_date_v = $scope.form1.end_date_v.setDate($scope.form1.start_date.getDate() + 1); 
+		//$scope.getRoom();
 	}
     $scope.getRoom = function (){
     	$scope.weekendFlg = false;
-    	var start_date = $filter('date')($scope.form1.start_date, "yyyy-MM-dd");
-    	var end_date = $filter('date')($scope.form1.end_date, "yyyy-MM-dd");
+		var start_date = $filter('date')($scope.form1.start_date, "yyyy-MM-dd");
+		var end_date = $filter('date')($scope.form1.end_date, "yyyy-MM-dd");
+    	//alert("start_date=="+start_date+" == end_date =="+end_date);
     	$scope.data = {
     			'start_date':start_date,
     			'end_date':end_date
     	};
     	$http.post($rootScope.baseUrl+'Booking/getRoomFoorBooking',$scope.data)
   	  .then(function(response) {
+  	  		//$scope.form1.start_date = new Date($scope.form1.start_date);
+  	  		//$scope.form1.end_date = new Date($scope.form1.end_date);
 		    $scope.getroomDetails = response.data;
+		    //alert(start_date+"-----"+$scope.currentDate(new Date()));
+		    /*if(start_date==$scope.currentDate(new Date())){
+		    	// booking with check in 
+		    	$scope.bookingwithcheckin = true;
+		    	//alert("Current date ");
+		    }else{
+		    	// Advance booking
+		    	$scope.bookingwithcheckin = false;
+		    	//alert("!current date");
+		    }*/
 			if(new Date($scope.form1.start_date).getDay()==6 || new Date($scope.form1.start_date).getDay() == 0){ // saturday sunday 
 			$scope.weekendFlg = true;
 			}
@@ -440,6 +456,22 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
     	
 		
 	}
+
+	$scope.currentDate = function(date){
+		var d = new Date(date),
+		month = '' + (d.getMonth()+1),
+		day =''+d.getDate(),
+		year = d.getFullYear();
+		if(month.length <2){
+			month = '0'+month;
+		}
+		if(day.length <2){
+			day = '0'+day;
+		}
+		return [year,month,day].join('-');
+	}
+
+
 	$scope.searchformobile = function (){
 		if($scope.form1.m_no.length>9){
 			$scope.data = {
@@ -511,7 +543,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	$scope.getamountDetails = function (rm,flg,getPriceflg){
 		if(rm.flg==1){ // date wise price 
 			if(getPriceflg==0){
-				return rm.amount;
+				return rm.amount+','+rm.room_number+','+rm.category;
 			}else{
 				return rm.room_number+'( '+ rm.category + '/'+ rm.amount +' )';
 			}
@@ -519,13 +551,15 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		}else{ // defult prices 
 			if(flg==true){ // weekend 
 				if(getPriceflg==0){
-				return rm.weekend_price;
+				//return rm.weekend_price;
+				return rm.weekend_price+','+rm.room_number+','+rm.category;
 			}else{
 				return rm.room_number+'( '+ rm.category + '/'+ rm.weekend_price +' )';
 			}
 			}else{ // weeksdays
 			if(getPriceflg==0){
-				return rm.week_days_price;
+				//return rm.week_days_price;
+				return rm.week_days_price+','+rm.room_number+','+rm.category;
 			}else{
 				return rm.room_number+'( '+ rm.category + '/'+ rm.week_days_price +' )';
 			}
@@ -534,7 +568,12 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		
 	}
 	$scope.bookingValidation = function(Obj){
-		if(Obj==undefined || Obj.roomId == undefined || Obj.name == undefined || Obj.gender== undefined  || Obj.age == undefined || Obj.email == undefined || Obj.m_no == undefined || Obj.idType == undefined || Obj.idValue == undefined || Obj.roomId == "" || Obj.name == "" || Obj.gender == "" || Obj.age== "" || Obj.email == "" || Obj.m_no== "" || Obj.idType== "" || Obj.idValue== ""){
+		//Obj.idType == undefined || Obj.idValue == undefined  || Obj.idType== "" || Obj.idValue== ""
+		if(Obj==undefined || Obj.roomId == undefined || Obj.name == undefined 
+			|| Obj.gender== undefined  || Obj.age == undefined || Obj.email == undefined || 
+			Obj.m_no == undefined ||  
+			Obj.roomId == "" || Obj.name == "" || Obj.gender == "" || Obj.age== "" || 
+			Obj.email == "" || Obj.m_no== ""){
 	    	swal({
 	              title: 'Required Error!',
 	              text: 'Please provied all field.',
@@ -544,8 +583,62 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 				return true;
 	}
 	}
+
+	$scope.submit_booking  = function(){
+		alert(JSON.stringify($scope.form1));
+		if($scope.bookingValidation($scope.form1)){
+			return false ;
+		}
+		if($scope.form1.id ==undefined || $scope.form1.id ==""){
+			$scope.form1.id = 0;
+		}
+
+		$http.post($rootScope.baseUrl+'Booking/upload',$scope.form1)
+	  .then(function(responces) {
+		  //$scope.roomBookingDetails = response.data;
+		   if(responces.data.customer_id>0){
+		   	$scope.bookingflg = true;
+		   swal({
+	              title: 'Success!',
+	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
+	              icon: 'success'
+	            }).then(function() {
+	            	
+					$scope.form1 = {};
+					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
+	            });
+		   }
+	   
+	  });
+	  return false;
+
+		$http({
+		  method  : 'POST',
+		  url     : $rootScope.baseUrl+'Booking/upload',
+		  processData: false,  
+		  data : $scope.form1,
+		  headers: {
+		         'Content-Type': undefined
+		  }
+	   }).then(function(responces){
+		   if(responces.data.customer_id>0){
+		   swal({
+	              title: 'Success!',
+	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
+	              icon: 'success'
+	            }).then(function() {
+					$scope.form1 = {};
+					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
+	            });
+		   }
+	   });
+
+	}
     
 	$scope.submit = function() {
+
+		alert(JSON.stringify($scope.form1));
+		//return false;
 		
 		if($scope.bookingValidation($scope.form1)){
 			return false ;

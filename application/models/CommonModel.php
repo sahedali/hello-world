@@ -7,10 +7,12 @@ class CommonModel extends CI_Model {
     }
     public function getRoomCategory()
 	{
-	    $this->db->from('room_category_master');
-	    $this->db->order_by("id", "desc");
-	    $query = $this->db->get(); 
-	    return $query->result_array();
+	    //$this->db->from('room_category_master');
+	    //$this->db->order_by("id", "desc");
+	    //$query = $this->db->get(); 
+	    $q = "SELECT b.*,group_concat(room_number) as room_id FROM room_master a,room_category_master b WHERE a.room_category_id = b.id group by room_category_id order by a.id desc";
+	    $res = $this->db->query($q);
+	    return $res->result_array();
 	}
 	
 	public function getRoomDetails(){
@@ -63,8 +65,26 @@ class CommonModel extends CI_Model {
 			'modified_on'=>'00-00-0000',
 			'modified_by'=>1,
 			'is_active'=>1
+    ); 
+
+
+	$roomNumber = explode(',', $data->room_id);
+	$flg1 =  $this->db->insert('room_category_master',$data_);
+	$categoryId = $this->db->insert_id();
+
+	foreach ($roomNumber as $rm) {
+		$data_ = array(
+        'room_number'=>$rm,
+        'room_category_id'=>$categoryId,
+		'created_on'=>'00-00-0000',
+		'created_by'=>1,
+        'modified_on'=>'00-00-0000',
+		'modified_by'=>1,
+		'is_active'=>1
     );
-	return $this->db->insert('room_category_master',$data_);
+		$flg = $this->db->insert('room_master',$data_);
+	}
+	return $flg;
 	/*$categoryId = $this->db->insert_id();
 	$data_for_price = array(
 	        'category_id'=>$categoryId,
@@ -95,10 +115,30 @@ class CommonModel extends CI_Model {
 			'is_active'=>1
 		);
 		$this->db->where('id', $data->id);  
-		return $this->db->update('room_category_master', $data_);  
+		$this->db->update('room_category_master', $data_);  
+
+		$roomNumber = explode(',', $data->room_id);
+		$this->db->where('room_category_id',$data->id);
+		$this->db->delete('room_master');
+
+		foreach ($roomNumber as $rm) {
+		$data_ = array(
+        'room_number'=>$rm,
+        'room_category_id'=>$data->id,
+		'created_on'=>'00-00-0000',
+		'created_by'=>1,
+        'modified_on'=>'00-00-0000',
+		'modified_by'=>1,
+		'is_active'=>1
+    	);
+		$flg = $this->db->insert('room_master',$data_);
 	}
+	return $flg;
+  }
 	
 	public function deleteRoomCat ($id){
+		$this->db->where('room_category_id', $id);
+		$this->db->delete('room_master');
 		$this->db->where('id', $id);
 		return $this->db->delete('room_category_master');
 	}
@@ -153,7 +193,7 @@ class CommonModel extends CI_Model {
 	
 	public function saveBooking ($data){
 		
-		$rmPrice = explode (",", $data->roomId);  // roomId, price 
+		$rmPrice = explode (",", $data->roomId);  // roomId, price , roomnumber, category
 		$id =0;
 	    $data_ = array(
 	        'name'=>$data->name,
@@ -161,8 +201,8 @@ class CommonModel extends CI_Model {
 	        'gender'=>$data->gender,
 	        'email_id'=>$data->email,
 	        'ph_number'=>$data->m_no,
-	        'id_type'=>$data->idType,
-	        'id_value'=>$data->idValue,
+	        'id_type'=>0,
+	        'id_value'=>0,
 	        'created_on'=>'00-00-0000',
 	        'created_by'=>1,
 	        'modified_on'=>'00-00-0000',
@@ -185,11 +225,14 @@ class CommonModel extends CI_Model {
 			
 	         $data_for_booking = array(
 	             'customer_id' =>$id ,
+	             'booking_number'=>date('d').date('m').date('y').$id,
 	             'start_date' => $data->start_date,
 	             'end_date' => $data->end_date,
 	             'room_id' =>$rmPrice[0],
 	             'price' =>$rmPrice[1],
-				 'check_in'=>$checnIn,
+	             'category_name'=>$rmPrice[3],
+	             'room_number'=>$rmPrice[2],
+				 'check_in'=>0,
 	             'created_on'=>'00-00-0000',
 	             'created_by'=>1,
 	             'modified_on'=>'00-00-0000',
@@ -227,6 +270,8 @@ class CommonModel extends CI_Model {
 				BETWEEN price.start_date and end_date ) and rm.id 
                 NOT IN (SELECT bk.room_id from booking bk WHERE STR_TO_DATE(bk.start_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."'
 				 and STR_TO_DATE( bk.end_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."')";
+				// echo $sql;
+				// die;
 	    $res = $this->db->query($sql);
 	    return $res->result_array();
 	    

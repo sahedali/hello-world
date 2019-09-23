@@ -39,7 +39,10 @@ class Booking extends CI_Controller
             move_uploaded_file($_FILES["image"]["tmp_name"], $path.$image);
             echo json_encode($customerId);
         }else{
-            $data = json_decode($_POST['data']);
+            //$data = json_decode($_POST['data']);
+            $data = json_decode(file_get_contents('php://input'));
+            //print_r($data);
+            //           die;
             $customerId=$this->CommonModel->saveBooking($data);
 			echo json_encode($customerId);
         }

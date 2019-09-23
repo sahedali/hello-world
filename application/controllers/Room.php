@@ -21,11 +21,6 @@ class Room extends CI_Controller
         echo 'hi login ';
         
     }
-  /*   public function RoomMaster() {
-        $this->load->view('common/header');
-        $this->load->view('Room/RoomView');
-        $this->load->view('common/footer');
-    } */
 	public function saveRoom(){
 		echo $this->CommonModel->saveRoom(json_decode(file_get_contents('php://input')));
 	}
@@ -42,8 +37,6 @@ class Room extends CI_Controller
 	}
 	
 	public function deleteRoomCat(){
-//		$obj = file_get_contents('php://input');
-//		$data = json_decode($obj);
 		echo $this->CommonModel->deleteRoomCat(json_decode(file_get_contents('php://input'))->id);
 	}
 	public function saveRoomCat(){

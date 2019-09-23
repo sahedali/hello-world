@@ -26,5 +26,5 @@ app.config(['$routeProvider',function($routeProvider,$locationProvider){
 	
 }])
 app.run(function($rootScope) {
-    $rootScope.baseUrl = "http://localhost/Hotel/";
+    $rootScope.baseUrl = "http://localhost:786/Hotel/";
 });

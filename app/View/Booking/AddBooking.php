@@ -112,7 +112,7 @@
 								</div>
 						</div>
 					 
-					 <div class="col-md-3">
+					 <div class="col-md-3" ng-if="bookingwithcheckin">
 								<label>Id Type</label> 
 								<div class="input-group">							
 								<span class="input-group-addon">
@@ -123,7 +123,7 @@
                                 </select>
 								</div>
 						</div>
-					 <div class="col-md-3">
+					 <div class="col-md-3" ng-if="bookingwithcheckin">
 								<label>Id Value</label> 
 								<div class="input-group">							
 								<span class="input-group-addon">
@@ -135,7 +135,7 @@
 								</div>
 						</div>
 						
-						<div class="col-md-3">
+						<div class="col-md-3" ng-if="bookingwithcheckin">
 								<label>Upload Id</label> 
 								<div class="input-group">							
 								<!-- <span class="input-group-addon">
@@ -153,11 +153,42 @@
 					 <div class="col-md-2">  
 					 	<label>&nbsp;</label> 
 					 	<div class="input-group">							
-								<button type="submit" class="btn btn-default" data-ng-click="submit()">Submit</button> 
+								<button type="submit" class="btn btn-default" data-ng-click="submit_booking()" ng-if="!bookingflg">Booking</button>
+								<button type="submit" class="btn btn-default" ng-if="bookingflg" disabled="disabled">Booking</button>
+						</div>
+					 </div>
+					 <div class="col-md-2">  
+					 	<label>&nbsp;</label> 
+					 	<div class="input-group">							
+								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Add Payment</button>
+								<button type="submit" class="btn btn-default" data-ng-click="addPayment()" ng-if="bookingflg">Add Payment</button> 
+						</div>
+					 </div>
+					 <div class="col-md-2">  
+					 	<label>&nbsp;</label> 
+					 	<div class="input-group">							
+								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Add Guest</button> 
+								<button type="submit" class="btn btn-default" ng-if="bookingflg">Add Guest</button> 
+						</div>
+					 </div>
+					 
+					 <div class="col-md-3">  
+					 	<label>&nbsp;</label> 
+					 	<div class="input-group">							
+								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Upload Documents</button>
+								<button type="submit" class="btn btn-default" ng-if="bookingflg">Upload Documents</button> 
+						</div>
+					 </div>
+					 
+					 <div class="col-md-2">  
+					 	<label>&nbsp;</label> 
+					 	<div class="input-group">							
+								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">CheckIn</button> 
+								<button type="submit" class="btn btn-default" data-ng-click="submit()" ng-if="bookingflg">CheckIn</button> 
 						</div>
 					 </div>
 					 </div>
-					 
+
 					  </form> 
 				</div>	
 						

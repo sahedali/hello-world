@@ -32,9 +32,9 @@
                           
 				</table> 
 				</div>
-				<div data-pagination="" data-num-pages="numOfPages()" 
+				<!--div data-pagination="" data-num-pages="numOfPages()" 
       data-current-page="curPage" data-max-size="maxSize"  
-      data-boundary-links="true"></div>
+      data-boundary-links="true"></div-->
 				
 				
 			</div>
@@ -65,7 +65,8 @@
 								<textarea class="form-control" rows="5" id="comment" 
 								data-ng-model="roomCategory.description"></textarea>
 							</div>
-						</div>
+						</div>						
+
 						<div class="form-group row">
 							<div class="col-md-5">
 								<label>Week Days Price</label> <input
@@ -79,6 +80,16 @@
 								data-ng-model="roomCategory.weekend_price">
 							</div>
 						</div>
+
+						<div class="form-group row">
+							<div class="col-md-5">
+								<label>Room No</label> <input
+									type="text" class="form-control" 
+									placeholder="Enter Room Number" data-ng-model="roomCategory.room_id">
+							</div>
+						</div>
+
+						
 					</form>
 									</div>
 									<div class="modal-footer" data-ng-hide="addEditflag">
