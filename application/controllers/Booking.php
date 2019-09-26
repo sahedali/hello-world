@@ -70,6 +70,19 @@ class Booking extends CI_Controller
 	public function getBookingDetailsUpdate(){
 		echo json_encode($this->CommonModel->getBookingDetailsUpdate(json_decode(file_get_contents('php://input'))));
 	}
+	public function getAccountLedgerDetails(){
+		echo json_encode($this->CommonModel->getAccountDetails());
+	}
 	
-    
+	public function getPaymentDetails(){
+		echo json_encode($this->CommonModel->getPaymentDetails(json_decode(file_get_contents('php://input'))));
+	}
+	public function savePaymentDetails(){
+		echo json_encode($this->CommonModel->savePaymentDetails(json_decode(file_get_contents('php://input'))));
+	}
+	
+	
+	
+	
+	    
 }

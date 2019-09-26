@@ -7,9 +7,6 @@ class CommonModel extends CI_Model {
     }
     public function getRoomCategory()
 	{
-	    //$this->db->from('room_category_master');
-	    //$this->db->order_by("id", "desc");
-	    //$query = $this->db->get(); 
 	    $q = "SELECT b.*,group_concat(room_number) as room_id FROM room_master a,room_category_master b WHERE a.room_category_id = b.id group by room_category_id order by a.id desc";
 	    $res = $this->db->query($q);
 	    return $res->result_array();
@@ -306,7 +303,48 @@ class CommonModel extends CI_Model {
 		return $this->db->update('booking', $data_);  
 	}
 	
+	public function getAccountDetails(){
+		$sql = "SELECT * FROM account_ledger";
+		$res = $this->db->query($sql);
+		return $res->result_array();
+	}
+	public function getPaymentDetails($data){
+		$sql = "SELECT DATEDIFF(end_date,start_date) * price as total_amount ,DATEDIFF(end_date,start_date) as number_of_days,price,booking_number,start_date , end_date ,id as booking_id FROM booking WHERE id =".$data->bookingId;
+		$res = $this->db->query($sql);
+		return $res->result();
+	}
+	public function savePaymentDetails($data){
+		
+		$sql = "SELECT * FROM payment WHERE booking_id = ".$data->bookingId;
+		$query = $this->db->query($sql);
+		//print_r($query->result()[0]->payment_id);
+		//die;
+		$data_ = array(
+        'booking_id'=>$data->bookingId,
+        'payment_amount'=>$data->payment,
+		'ledger_id'=>$data->ledger_id,
+		'payment_date'=>null,
+		'created_on'=>'00-00-0000',
+		'created_by'=>1,
+        'modified_on'=>'00-00-0000',
+		'modified_by'=>1,
+		'is_active'=>1
+		);
+		if($query->num_rows()>0){
+			//update 
+			$this->db->where('booking_id', $data->bookingId);  
+			$this->db->update('payment',$data_);
+			$ss = 0 + $query->result()[0]->payment_id; $ss = (int)$ss;
+			return $ss;
+		}else{
+			$this->db->insert('payment',$data_);
+			return $this->db->insert_id();
+		}
 	
+	
+	
+	}
+
 	
 	
 }
