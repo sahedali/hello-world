@@ -25,7 +25,7 @@ date_default_timezone_set('Asia/Kolkata');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:786/Hotel/';
+$config['base_url'] = 'http://localhost/Hotel/';
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ $config['base_url'] = 'http://localhost:786/Hotel/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------

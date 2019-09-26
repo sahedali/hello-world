@@ -4,14 +4,17 @@
 			<h2 class="title1">Room Booking</h2>
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
-				<div class="form-title">
-							<h4>Booking Form :</h4>
-						</div>
+				<div class="form-title row">
+				<div class="col-md-3"><h4>Booking Form :</h4></div>
+				<div class="col-md-3"></div>
+				<div class="col-md-3"></div>
+				<div class="col-md-3"><a class="pull-right" href="#!/RoomBooking">Back</a></div>
+				</div>
 				
 				<div class="form-body">
 				
 					 <div class="row">
-						<br>
+						
 						<div class="col-md-3">
 								<label>Start Date</label> 
 								<div class="input-group">							

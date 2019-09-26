@@ -8,6 +8,8 @@ class Room extends CI_Controller
 
     public function __construct()
     {
+		//echo 'hi--'.date("m.d.y");
+		//die;
         parent::__construct();
         $this->load->model('CommonModel');
         //$this->load->model('ReportModel');

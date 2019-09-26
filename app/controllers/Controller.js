@@ -707,6 +707,10 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 		  $scope.roomBookingDetails = response.data;
 	  });
 	}
+
+	$scope.getBookingDetailss =function(ss){
+		alert(JSON.stringify(ss));
+	}
 	
 	$scope.uodateBooking = {};
 	// edit booking 

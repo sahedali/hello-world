@@ -23,8 +23,10 @@ app.config(['$routeProvider',function($routeProvider,$locationProvider){
 	.when('/editBookind/:bk',{
 		templateUrl :'../app/View/Booking/EditBookind.php'
 	})
-	
+	.when('/ComplitedBooking',{
+		templateUrl :'../app/View/Booking/PaymentBooking.php'
+	})
 }])
 app.run(function($rootScope) {
-    $rootScope.baseUrl = "http://localhost:786/Hotel/";
+    $rootScope.baseUrl = "http://localhost/Hotel/";
 });

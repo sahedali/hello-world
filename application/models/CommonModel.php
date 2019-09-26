@@ -279,6 +279,8 @@ class CommonModel extends CI_Model {
 
 	public function getBookingDetails($data){
 		$sql = "SELECT bk.id,bk.price,cus.name , bk.start_date, bk.end_date , rm.room_number, rmcat.description FROM booking bk , room_master rm ,room_category_master rmcat,customer cus WHERE bk.customer_id = cus.id and bk.room_id=rm.id and rm.room_category_id=rmcat.id and bk.check_in = '".$data->flg."' ORDER BY bk.id DESC";
+		//echo $sql;
+		//die;
 		$res = $this->db->query($sql);
 		return $res->result_array();
 	}
