@@ -7,21 +7,12 @@
 				<div class="form-title row">
 				<div class="col-md-3">Room Details</div>
 				<div class="col-md-3">
-				<select class="form-control pull-center" data-ng-change="getBookingDetails()" ng-model="bookingStatus">
-                                    <option value="1" ng-selected="true">
-                                     Active
-                                     </option>
-									 <option value="0">
-                                     Pending
-                                     </option>
-									 <option value="2">
-                                     Advance
-                                     </option>
-									 <option value="3">
-                                     History
-                                     </option>
-									  
-                                </select>
+						<select class="form-control pull-center" data-ng-change="getBookingDetails()" ng-model="bookingStatus">
+                                    <option value="1" ng-selected="true">Active</option>
+									 <option value="0">Pending</option>
+									 <option value="2">Advance</option>
+									 <option value="3">History</option>
+                        </select>
 				</div>
 				<div class="col-md-3"></div>
 				<div class="col-md-3"><a class="fa fa-plus pull-right" href="#!/AddRoom" > </a> </div>
@@ -37,7 +28,7 @@
                           <th class="th-sm">End Date</th>
 						  <th class="th-sm">Room</th>
 						  <th class="th-sm">Prices</th>
-						  <th class="th-sm">Room Desc <div class="col-md-3"><a class="fa fa-plus pull-right" href="#!/ComplitedBooking" > ddd </a> </div></th>
+						  <th class="th-sm">Room Desc <div class="col-md-3"></div></th>
 						  <th class="th-sm" ng-if="bookingStatus==0">Pending Action</th>
 						  <th class="th-sm" ng-if="bookingStatus==1">Check  Out</th>
 						  <th class="th-sm" ng-if="bookingStatus==2">Check  In</th>
@@ -64,7 +55,7 @@
 						<td data-toggle="modal" 
 							data-target="#exampleModal" 
 							data-ng-click="editRoomBooking(bk)">{{bk.description}}</td>
-						<td data-ng-if="bookingStatus==0" data-ng-click="getBookingDetailss(bk)" href="#!/ComplitedBooking"><a>Next</a></td>
+						<td data-ng-if="bookingStatus==0" data-ng-click="getBookingDetailss(bk)"><a>Next</a></td>
 						<td data-ng-if="bookingStatus==1"><a>Submit</a></td>
 						<td data-ng-if="bookingStatus==2"><a>Submit Check in</a></td>
 						<!--td data-ng-if="bookingStatus==3">Ok</td-->
@@ -116,7 +107,7 @@
 							
 							<div class="col-md-6">
 								<label>End Date</label> <input
-									type="date" class="form-control" 
+									type="date" class="form-control" id="end_date_"
 									data-ng-model="uodateBooking.end_date" min="{{uodateBooking.start_date | date: 'yyyy-MM-dd'}}">
 							</div>
 							

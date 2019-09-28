@@ -4,6 +4,7 @@ class CommonModel extends CI_Model {
     function __construct()
     {
         parent::__construct();
+		date_default_timezone_set('Asia/Calcutta');
     }
     public function getRoomCategory()
 	{
@@ -189,7 +190,6 @@ class CommonModel extends CI_Model {
 	
 	
 	public function saveBooking ($data){
-		
 		$rmPrice = explode (",", $data->roomId);  // roomId, price , roomnumber, category
 		$id =0;
 	    $data_ = array(
@@ -223,8 +223,8 @@ class CommonModel extends CI_Model {
 	         $data_for_booking = array(
 	             'customer_id' =>$id ,
 	             'booking_number'=>date('d').date('m').date('y').$id,
-	             'start_date' => $data->start_date,
-	             'end_date' => $data->end_date,
+	             'start_date' => $data->start_date.' '.date("H:i:s"),
+	             'end_date' => $data->end_date.' '.date("H:i:s"),
 	             'room_id' =>$rmPrice[0],
 	             'price' =>$rmPrice[1],
 	             'category_name'=>$rmPrice[3],
@@ -254,8 +254,7 @@ class CommonModel extends CI_Model {
 	    $sql = "SELECT DISTINCT rm.room_number,rm.id as room_id,rm.room_category_id,rmcat.name as category,
                 rmcat.description,price.amount,0 as week_days_price, 0 as weekend_price,'1' as flg FROM room_master rm,room_category_master rmcat,price_detail price 
                 where rm.room_category_id = rmcat.id and rm.id 
-                NOT IN (SELECT bk.room_id from booking bk WHERE STR_TO_DATE(bk.start_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."'
-				 and STR_TO_DATE( bk.end_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."') and 
+                NOT IN (SELECT bk.room_id from booking bk WHERE STR_TO_DATE( bk.end_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."' or '".$data->start_date."' between STR_TO_DATE( bk.start_date, '%Y-%m-%d') and STR_TO_DATE( bk.end_date, '%Y-%m-%d') or '".$data->end_date."' between STR_TO_DATE( bk.start_date, '%Y-%m-%d') and STR_TO_DATE( bk.end_date, '%Y-%m-%d') ) and 
                 price.category_id = rm.room_category_id and '".$data->start_date."' BETWEEN price.start_date and end_date and '".$data->end_date."'
 				BETWEEN price.start_date and end_date  union SELECT rm.room_number,rm.id as room_id,rm.room_category_id,rmcat.name as category, rmcat.description,0 as amount,rmcat.week_days_price 
 ,rmcat.weekend_price,'2' as flg FROM room_master rm,room_category_master rmcat
@@ -267,8 +266,8 @@ class CommonModel extends CI_Model {
 				BETWEEN price.start_date and end_date ) and rm.id 
                 NOT IN (SELECT bk.room_id from booking bk WHERE STR_TO_DATE(bk.start_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."'
 				 and STR_TO_DATE( bk.end_date, '%Y-%m-%d') between '".$data->start_date."' and '".$data->end_date."')";
-				// echo $sql;
-				// die;
+				 //echo $sql;
+				 //die;
 	    $res = $this->db->query($sql);
 	    return $res->result_array();
 	    
@@ -296,7 +295,7 @@ class CommonModel extends CI_Model {
 	public function getBookingDetailsUpdate($data)
 	{
 		$data_ = array(
-			'start_date'=>$data->start_date,
+			//'start_date'=>$data->start_date,
 			'end_date'=>$data->end_date
 		);
 		$this->db->where('id', $data->id);  
@@ -340,12 +339,59 @@ class CommonModel extends CI_Model {
 			$this->db->insert('payment',$data_);
 			return $this->db->insert_id();
 		}
+	}
 	
-	
-	
+	public function saveGustDetails($data){
+		//print_r($data);
+		//die;
+		foreach($data->data as $dt){
+			$tableData = array(
+				'booking_id'=>$data->bookingId,
+				'name'=>$dt->gust_name,
+				'age'=>$dt->gust_age,
+				'gender'=>$dt->gust_gnder,
+				'created_on'=>'00-00-0000',
+				'created_by'=>1,
+				'modified_on'=>'00-00-0000',
+				'modified_by'=>1,
+				'is_active'=>1
+			);
+			$this->db->insert('customer_gust',$tableData);
+		}
+		return true;
 	}
 
+	public function getGustDetails($data){
+		$sql = "SELECT  * FROM customer_gust WHERE booking_id =".$data->bookingId;
+		$res = $this->db->query($sql);
+		return $res->result();
+	}
 	
+	public function getCustomerDetails ($data){
+		$sql ="SELECT cus.name,cus.age,cus.gender,cus.id as customer_id, 1 as 'flgofhead' from customer cus , booking bk where bk.customer_id = cus.id and bk.id = ".$data->bookingId." 
+				UNION 
+		       SELECT gst.name,gst.age,gst.gender,gst.id as customer_id,0 as 'flgofhead' FROM booking bk , customer_gust gst WHERE 	bk.id = gst.booking_id  and bk.id =".$data->bookingId;
+		$res = $this->db->query($sql);
+		return $res->result();
+	}
+	
+	public function requestForCheckIN($data){
+		$bkId = $data->bookingId;
+		$sql = "select STR_TO_DATE(start_date, '%Y-%m-%d') as start_date from booking where id=".$bkId;
+		$res = $this->db->query($sql);
+		$start_date = "";
+		foreach($res->result() as $data){
+			$start_date = $data->start_date;
+		}
+		if(date("Y-m-d") == $start_date){
+			$checkin = 1;
+		}else{
+			$checkin = 2;
+		}
+		$sql1 = "update booking set check_in =".$checkin." where id=".$bkId;
+		$this->db->query($sql1);
+		return $checkin;
+	}
 	
 }
 

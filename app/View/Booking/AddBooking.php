@@ -21,7 +21,7 @@
 								<span class="input-group-addon">
 													<i class="fa fa-envelope-o"></i>
 								</span>
-								<input type="date" class="form-control1" 
+								<input type="date" class="form-control1" id="get_start_date"
 								data-ng-model="form1.start_date" min="{{form1.start_date_v | date: 'yyyy-MM-dd'}}"
 								placeholder="Enter Mobile No" ng-change="dateValidation()" ng-disabled="bookingflg">
 								</div>
@@ -32,7 +32,7 @@
 								<span class="input-group-addon">
 													<i class="fa fa-envelope-o"></i>
 								</span>
-								<input type="date" class="form-control1" data-ng-change="getRoom()"
+								<input type="date" class="form-control1" data-ng-change="getRoom()" id="get_end_date"
 								data-ng-model="form1.end_date" min="{{form1.end_date_v | date: 'yyyy-MM-dd'}}" ng-disabled="bookingflg">
 								</div>
 						</div>
@@ -175,7 +175,8 @@
 					 	<label>&nbsp;</label> 
 					 	<div class="input-group">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Add Guest</button> 
-								<button type="submit" class="btn btn-default" ng-if="bookingflg">Add Guest</button> 
+								<button type="submit" class="btn btn-default" ng-if="bookingflg" data-toggle="modal" 
+							data-target="#addGust" data-ng-click="gust_init(bookingId)">Add Guest</button> 
 						</div>
 					 </div>
 					 
@@ -183,7 +184,8 @@
 					 	<label>&nbsp;</label> 
 					 	<div class="input-group">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Upload Documents</button>
-								<button type="submit" class="btn btn-default" ng-if="bookingflg">Upload Documents</button> 
+								<button type="submit" class="btn btn-default" ng-if="bookingflg" ng-click="gust_doc_init(3)"
+								data-toggle="modal" data-target="#adddoc">Upload Documents</button> 
 						</div>
 					 </div>
 					 
@@ -191,7 +193,7 @@
 					 	<label>&nbsp;</label> 
 					 	<div class="input-group">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">CheckIn</button> 
-								<button type="submit" class="btn btn-default" data-ng-click="submit()" ng-if="bookingflg">CheckIn</button> 
+								<button type="submit" class="btn btn-default" data-ng-click="submit(bookingId)" ng-if="bookingflg">CheckIn</button> 
 						</div>
 					 </div>
 					 </div>
@@ -212,9 +214,8 @@
 										<button type="button" class="close" id="closed" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">×</span></button>
 										<h4 class="modal-title" id="exampleModalLabel"> 
-										<span data-ng-show="addEditflag">Add</span>
-										<span data-ng-hide="addEditflag">Edit</span>
-										Room</h4>
+										<span>Add</span>
+										payment</h4>
 									</div>
 									<div class="modal-body">
 					<form>
@@ -274,7 +275,135 @@
 									</div>
 									
 									<div class="modal-footer">
-										<button type="button" class="btn btn-primary" data-ng-click="savePayment(bookingId)">Add</button>
+										<button type="button" class="btn btn-primary" data-ng-click="savePayment(bookingId)">Save</button>
+									</div>
+								</div>
+							</div>
+			</div>
+</div>
+
+<!-- model end here -->
+
+<!-- add gust start here  -->
+	
+	<div class="col-md-4 modal-grids">
+			<div class="modal fade  bd-example-modal-lg" id="addGust" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;top:100px;">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" id="closedforGust" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">×</span></button>
+										<h4 class="modal-title" id="exampleModalLabel"> 
+										<span>Add</span>
+										Guest</h4>
+									</div>
+									<div class="modal-body">
+					<form>
+					
+					<div class="table-responsive bs-example widget-shadow">
+					<div class="form-group row">
+							<div class="col" style="cursor: pointer;">
+								<a class="fa fa-plus pull-right" ng-click="addRowForGust()" ng-if="!viewFlg"> </a>&nbsp;&nbsp;
+								<a class="fa fa-minus pull-right" ng-click="removeRowForGust()" ng-if="!viewFlg"> </a>
+								<a class="fa fa-plus pull-right" ng-if="viewFlg"> </a>&nbsp;&nbsp;
+								<a class="fa fa-minus pull-right" ng-if="viewFlg"> </a>
+							</div>
+						</div>
+					<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+							<thead>
+							  <tr>
+								  <th class="th-sm">Name</th>
+								  <th class="th-sm">Age</th>
+								  <th class="th-sm">Gender</th>
+							  </tr>
+							 </thead>
+							 <tbody>
+							   <tr ng-repeat="gst in gustDetails">
+								<td>
+									<input class="form-control" id="gustName" 
+									data-ng-model="gst.gust_name" name="" required ng-disabled="viewFlg">
+								</td>					
+								<td><input class="form-control" id="gustAge"  type="text"
+									data-ng-model="gst.gust_age" value="{{gst.gust_age}}" name="" ng-maxlength="3" required ng-disabled="viewFlg"></td>
+									<td><select class="form-control1" data-ng-model="gst.gust_gnder" name="" ng-disabled="viewFlg">
+                                    <option value="Male">Male</option>
+                                    <option value="FeMale">FeMale</option>
+                                </select>
+								<input class="form-control" id="bookingId"  type="hidden"
+									data-ng-model="gst.bookingId" value="{{bookingId}}">
+									<input class="form-control" id="gust_id"  type="hidden"
+									data-ng-model="gst.gust_id">
+								</td>
+								</tr>
+							  </tbody>
+								  
+						</table> 
+				</div>
+										
+					</form>
+									</div>
+									
+									<div class="modal-footer">
+										<button type="button" class="btn btn-primary" data-ng-click="saveGust(bookingId)" ng-disabled="viewFlg">Add Gust</button>
+									</div>
+								</div>
+							</div>
+			</div>
+</div>
+
+<!-- model end here -->
+
+
+<!-- add document start here  -->
+	
+	<div class="col-md-4 modal-grids">
+			<div class="modal fade  bd-example-modal-lg" id="adddoc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;top:100px;">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" id="closedfordoc" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">×</span></button>
+										<h4 class="modal-title" id="exampleModalLabel"> 
+										<span>Add</span>
+										Documents</h4>
+									</div>
+									<div class="modal-body">
+					<form>
+					
+					<div class="table-responsive bs-example widget-shadow">
+					
+					<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+							<thead>
+							  <tr>
+								  <th class="th-sm">Name</th>
+								  <th class="th-sm">Gender</th>
+								  <th class="th-sm">Documents</th>
+								  <th class="th-sm">LayOut</th>
+							  </tr>
+							 </thead>
+							 <tbody>
+							   <tr ng-repeat="doc in docForGust">
+								<td ng-bind="doc.name">
+								</td>	
+								<td ng-bind="doc.gender">
+								</td>									
+								<td>
+								<input data-ng-model="document" id="docId{{$index+1}}" type="file" class="form-control input-sm" 
+	  								onchange="angular.element(this).scope().uploadedFile(this)">
+								</td>
+								<td><!--img ng-src="{{image_source}}" style="width:100px;"-->									 
+								</td>
+								</tr>
+							  </tbody>
+								  
+						</table> 
+				</div>
+										
+					</form>
+									</div>
+									
+									<div class="modal-footer">
+										<!--button type="button" class="btn btn-primary" data-ng-click="saveGust(bookingId)" ng-disabled="viewFlg">Add Documents</button-->
 									</div>
 								</div>
 							</div>

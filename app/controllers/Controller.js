@@ -407,6 +407,81 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		
 	}
 	
+	$scope.gust_doc_init = function(bookingId){
+		$scope.data = {
+			"bookingId":bookingId
+		};
+		$http.post($rootScope.baseUrl+'Booking/getCustomerDetails',$scope.data)
+		  .then(function(response) {
+			  $scope.docForGust = response.data;
+		  }); 
+	}
+	
+	$scope.gust_init = function(bookingId){
+		$scope.viewFlg = false;
+		$scope.gustDetails =[];
+		$scope.data = {
+			"bookingId":bookingId
+		};
+		var obj ={
+			"gust_name":"",
+			"gust_age":"",
+			"gust_gnder":"",
+			"gust_id":"",
+		};
+		$http.post($rootScope.baseUrl+'Booking/getGustDetails',$scope.data)
+		  .then(function(response) {
+			  
+			  for(var i=0;i<response.data.length;i++){
+				  obj ={
+					  "gust_name":response.data[i].name,
+					  "gust_age":response.data[i].age,
+					  "gust_gnder":response.data[i].gender,
+					  "gust_id":response.data[i].id,
+				  };
+				  $scope.viewFlg = true;
+				  $scope.gustDetails.push(obj);
+			  }
+		  }); 
+		
+		
+	}
+	
+	$scope.addRowForGust = function(){
+				var obj ={
+			"gust_name":"",
+			"gust_age":"",
+			"gust_gnder":"",
+			"gust_id":"",
+		};
+     $scope.gustDetails.push(obj);
+	}
+	
+	$scope.removeRowForGust = function(){
+		$scope.gustDetails.splice($scope.gustDetails.length-1,1);
+	}
+	
+	$scope.saveGust = function(bookingId){
+		//$scope.gustDetails.bookingId = bookingId;
+		$scope.data = {
+			"data":$scope.gustDetails,
+			"bookingId":bookingId
+		};
+		$http.post($rootScope.baseUrl+'Booking/saveGustDetails',$scope.data)
+	        	  .then(function(response) {
+	        	    document.getElementById('closedforGust').click();
+	        	    	swal({
+	              title: 'Success!',
+	              text: 'Aginest booking Id is :'+bookingId+', Gust Added Succesfully.',
+	              icon: 'success'
+	            }).then(function() {
+					
+				});
+	        	  });
+		
+		//alert(JSON.stringify($scope.gustDetails));
+	}
+	
 	$scope.addPayment = function(bookingId){
 		$http.get($rootScope.baseUrl+'Booking/getAccountLedgerDetails')
 		  .then(function(response) {
@@ -443,9 +518,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	            });
 	        		}
 	        	  });
-	 
  }
-	
 	
 	
 	// booking edit end here 
@@ -465,33 +538,25 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
     $scope.form1.start_date_v = new Date();
     $scope.form1.end_date_v = new Date();
 	$scope.dateValidation = function(){
-		$scope.form1.end_date_v = $scope.form1.end_date_v.setDate($scope.form1.start_date.getDate() + 1); 
+		var start_date = $scope.form1.start_date;
+		$scope.form1.end_date_v = $scope.form1.end_date_v.setDate(start_date.getDate() + 1); 
 		//$scope.getRoom();
 	}
     $scope.getRoom = function (){
     	$scope.weekendFlg = false;
-		var start_date = $filter('date')($scope.form1.start_date, "yyyy-MM-dd");
-		var end_date = $filter('date')($scope.form1.end_date, "yyyy-MM-dd");
+		var sdt = $scope.form1.start_date;
+		var edt = $scope.form1.end_date;
+		var start_date = $filter('date')(sdt, "yyyy-MM-dd");
+		var end_date = $filter('date')(edt, "yyyy-MM-dd");
     	//alert("start_date=="+start_date+" == end_date =="+end_date);
+		//return false;
     	$scope.data = {
     			'start_date':start_date,
     			'end_date':end_date
     	};
     	$http.post($rootScope.baseUrl+'Booking/getRoomFoorBooking',$scope.data)
   	  .then(function(response) {
-  	  		//$scope.form1.start_date = new Date($scope.form1.start_date);
-  	  		//$scope.form1.end_date = new Date($scope.form1.end_date);
 		    $scope.getroomDetails = response.data;
-		    //alert(start_date+"-----"+$scope.currentDate(new Date()));
-		    /*if(start_date==$scope.currentDate(new Date())){
-		    	// booking with check in 
-		    	$scope.bookingwithcheckin = true;
-		    	//alert("Current date ");
-		    }else{
-		    	// Advance booking
-		    	$scope.bookingwithcheckin = false;
-		    	//alert("!current date");
-		    }*/
 			if(new Date($scope.form1.start_date).getDay()==6 || new Date($scope.form1.start_date).getDay() == 0){ // saturday sunday 
 			$scope.weekendFlg = true;
 			}
@@ -611,7 +676,6 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		
 	}
 	$scope.bookingValidation = function(Obj){
-		//Obj.idType == undefined || Obj.idValue == undefined  || Obj.idType== "" || Obj.idValue== ""
 		if(Obj==undefined || Obj.roomId == undefined || Obj.name == undefined 
 			|| Obj.gender== undefined  || Obj.age == undefined || Obj.email == undefined || 
 			Obj.m_no == undefined ||  
@@ -628,7 +692,8 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	}
 
 	$scope.submit_booking  = function(){
-		//alert(JSON.stringify($scope.form1));
+		$scope.form1.start_date = document.getElementById('get_start_date').value;
+		$scope.form1.end_date = document.getElementById('get_end_date').value;
 		if($scope.bookingValidation($scope.form1)){
 			return false ;
 		}
@@ -637,8 +702,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		}
 
 		$http.post($rootScope.baseUrl+'Booking/upload',$scope.form1)
-	  .then(function(responces) {
-		  //$scope.roomBookingDetails = response.data;
+	    .then(function(responces) {
 		   if(responces.data.customer_id>0){
 		   	$scope.bookingflg = true;
 			$scope.bookingId = responces.data.booking_id;
@@ -648,7 +712,6 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
 	              icon: 'success'
 	            }).then(function() {
-	            	
 					//$scope.form1 = {};
 					//$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
 	            });
@@ -656,7 +719,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	   
 	  });
 	  return false;
-
+	/*
 		$http({
 		  method  : 'POST',
 		  url     : $rootScope.baseUrl+'Booking/upload',
@@ -676,16 +739,35 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
 	            });
 		   }
-	   });
-
+	   });*/
 	}
     
-	$scope.submit = function() {
-
-		alert(JSON.stringify($scope.form1));
+	$scope.submit = function(bookingId) {
+		
+		$scope.data = {
+			"bookingId":bookingId
+		};
+		$http.post($rootScope.baseUrl+'Booking/requestForCheckIN',$scope.data)
+	        	  .then(function(response) {
+					  document.getElementById('closedforGust').click();
+					  var flg ="";
+					  if(response.data==1){
+						  flg = "Check In";
+					  }else{
+						  flg ="Advance Booking";
+					  }
+	        	  swal({
+	              title: 'Success!',
+	              text: flg+' Succesfully Done.',
+	              icon: 'success'
+	            }).then(function() {
+					
+				});
+	        	  });
+		//alert(JSON.stringify($scope.form1));
 		//return false;
 		
-		if($scope.bookingValidation($scope.form1)){
+		/*if($scope.bookingValidation($scope.form1)){
 			return false ;
 		}
 		if($scope.form1.id ==undefined || $scope.form1.id ==""){
@@ -718,7 +800,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	            });
 		   }
 	   });
-
+		*/
 
       };
 
@@ -754,7 +836,7 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 	}
 
 	$scope.getBookingDetailss =function(ss){
-		alert(JSON.stringify(ss));
+		//alert(JSON.stringify(ss));
 		window.location.href = $rootScope.baseUrl+'Common/home#!/ComplitedBooking';
 	}
 	
@@ -768,6 +850,8 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 		$scope.uodateBooking.id = Obj.id;
 	}
 	$scope.updateRoomBooking = function(){
+		alert(JSON.stringify($scope.uodateBooking));
+		//return false;
 		$http.post($rootScope.baseUrl+'Booking/getBookingDetailsUpdate',$scope.uodateBooking)
 	  .then(function(response) {
 		  document.getElementById('closed').click();
