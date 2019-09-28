@@ -400,6 +400,26 @@ app.controller('RoomPriceController', function($scope,$http,$rootScope){
 
 app.controller('BookingController', function($rootScope,$scope,$http,$filter,$routeParams){
     //booking edit 
+	$scope.form = [];
+	$scope.form1 ={};
+    $scope.files = [];
+	$scope.srch ={};
+    $scope.form1.start_date_v = new Date();
+    $scope.form1.end_date_v = new Date();
+	
+	if($routeParams.flg==undefined || $routeParams.flg==""){
+		$rootScope.bookingDetailsObj ={};
+		$rootScope.roomEditFlg=false;
+	}else{
+		$scope.form1.start_date ='';
+		$scope.form1.end_date ='';
+		$scope.form1 = $rootScope.bookingDetailsObj;
+		$scope.form1.start_date =new Date($scope.form1.start_date); //$filter("date")(Date.now($scope.form1.start_date), 'yyyy-MM-dd');
+		$scope.form1.end_date =new Date($scope.form1.end_date);
+		$scope.bookingId = $scope.form1.id;
+		//$scope.addPayment($scope.bookingId);
+		//$scope.form1.start_date = new Date($scope.form1.start_date);
+	}
 	$scope.formatDate = function(date){
         return new Date(date);
 	};
@@ -506,7 +526,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	 };
 	 $http.post($rootScope.baseUrl+'Booking/savePaymentDetails',$scope.data)
 	        	  .then(function(response) {
-	        	    if(response.data>1){
+	        	    if(response.data>0){
 	        	    	document.getElementById('closed').click();
 	        	    	swal({
 	              title: 'Success!',
@@ -531,12 +551,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		  $scope.bookingflg = false;
 	}
 
-	$scope.form = [];
-	$scope.form1 ={};
-    $scope.files = [];
-	$scope.srch ={};
-    $scope.form1.start_date_v = new Date();
-    $scope.form1.end_date_v = new Date();
+	
 	$scope.dateValidation = function(){
 		var start_date = $scope.form1.start_date;
 		$scope.form1.end_date_v = $scope.form1.end_date_v.setDate(start_date.getDate() + 1); 
@@ -821,7 +836,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 
 
 
-app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$http,$rootScope){
+app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$http,$rootScope,$routeParams){
 	$scope.formatDate = function(date){
         return new Date(date);
   };
@@ -837,7 +852,9 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 
 	$scope.getBookingDetailss =function(ss){
 		//alert(JSON.stringify(ss));
-		window.location.href = $rootScope.baseUrl+'Common/home#!/ComplitedBooking';
+		$rootScope.bookingDetailsObj = ss;
+		$rootScope.roomEditFlg=true;
+		window.location.href = $rootScope.baseUrl+'Common/home#!/ComplitedBooking/1';
 	}
 	
 	$scope.uodateBooking = {};
@@ -849,9 +866,17 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 		$scope.uodateBooking.roomId = Obj.room_number+'('+Obj.price+')';
 		$scope.uodateBooking.id = Obj.id;
 	}
-	$scope.updateRoomBooking = function(){
-		alert(JSON.stringify($scope.uodateBooking));
-		//return false;
+	$scope.updateRoomBooking = function(bookingStatus){
+		if(document.getElementById('end_date_').value !="" || document.getElementById('end_date_').value !=undefined){
+			$scope.uodateBooking.end_date = document.getElementById('end_date_').value;
+		}else{
+			alert("Please fill up end date");
+			return false;
+		}
+		if(document.getElementById('start_date_').value>document.getElementById('end_date_').value){
+			alert("End date should be gater the of start date");
+			return false;
+		}
 		$http.post($rootScope.baseUrl+'Booking/getBookingDetailsUpdate',$scope.uodateBooking)
 	  .then(function(response) {
 		  document.getElementById('closed').click();
@@ -861,7 +886,19 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 	              text: 'Booking update succfully.',
 	              icon: 'success'
 	            }).then(function() {
-					$scope.init();
+					var bkDetails = {"flg":bookingStatus};
+					 $http.post($rootScope.baseUrl+'Booking/getBookingDetails',bkDetails)
+					  .then(function(response) {
+						  $scope.roomBookingDetails = response.data;
+					  });
+					//$scope.bookingStatus=bookingStatus;
+	            });
+		  }else{
+			  swal({
+	              title: 'Error!',
+	              text: 'End date should be gater the of start date.',
+	              icon: 'error'
+	            }).then(function() {
 	            });
 		  }
 	  });

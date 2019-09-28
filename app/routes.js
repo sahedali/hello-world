@@ -17,15 +17,18 @@ app.config(['$routeProvider',function($routeProvider,$locationProvider){
 	.when('/RoomBooking',{
 		templateUrl :'../app/View/Booking/RoomBooking.php'
 	})
-	.when('/AddRoom',{
+	.when('/AddRoom/',{
+		templateUrl :'../app/View/Booking/AddBooking.php'
+	})
+	.when('/ComplitedBooking/:flg',{
 		templateUrl :'../app/View/Booking/AddBooking.php'
 	})
 	.when('/editBookind/:bk',{
 		templateUrl :'../app/View/Booking/EditBookind.php'
 	})
-	.when('/ComplitedBooking',{
+	/*.when('/ComplitedBooking',{
 		templateUrl :'../app/View/Booking/PaymentBooking.php'
-	})
+	})*/
 }])
 app.run(function($rootScope) {
     $rootScope.baseUrl = "http://localhost/Hotel/";

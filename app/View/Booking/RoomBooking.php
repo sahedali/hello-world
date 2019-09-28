@@ -87,7 +87,7 @@
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
-										<button type="button" class="close" id="closed" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
+										<button type="button" class="close" id="closed" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 										<h4 class="modal-title" id="exampleModalLabel"> 
 										<span data-ng-show="addEditflag">Add</span>
 										<span data-ng-hide="addEditflag">Edit</span>
@@ -99,9 +99,9 @@
 							<div class="col-md-6">
 							<label>Start Date</label> <input
 									type="date" class="form-control" 
-									data-ng-model="uodateBooking.start_date" disabled ng-if="bookingStatus==1">
+									data-ng-model="uodateBooking.start_date" id="start_date_" disabled ng-if="bookingStatus==1 || bookingStatus==0">
 									<input
-									type="date" class="form-control" 
+									type="date" class="form-control" id="start_date_"
 									data-ng-model="uodateBooking.start_date" ng-if="bookingStatus==2" min="{{start_date_advance | date: 'yyyy-MM-dd'}}">
 							</div>
 							
@@ -123,7 +123,7 @@
 									</div>
 									<div class="modal-footer">
 										<!--button type="button" class="btn btn-danger pull-left" data-ng-click="deleteRoom()">Delete</button-->
-										<button type="button" class="btn btn-primary" data-ng-click="updateRoomBooking()">Update</button>
+										<button type="button" class="btn btn-primary" data-ng-click="updateRoomBooking(bookingStatus)">Update</button>
 									</div>
 									<!--div class="modal-footer" data-ng-show="addEditflag">
 										<button type="button" class="btn btn-primary" data-ng-click="saveRoom()">Add</button>

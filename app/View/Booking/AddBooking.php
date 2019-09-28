@@ -5,7 +5,7 @@
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title row">
-				<div class="col-md-3"><h4>Booking Form :</h4></div>
+				<div class="col-md-3"><h4 ng-if="!roomEditFlg">Booking Form </h4> <h4 ng-if="roomEditFlg">Booking Update Form{{bookingId}} </h4> </div>
 				<div class="col-md-3"></div>
 				<div class="col-md-3"></div>
 				<div class="col-md-3"><a class="pull-right" href="#!/RoomBooking">Back</a></div>
@@ -23,7 +23,10 @@
 								</span>
 								<input type="date" class="form-control1" id="get_start_date"
 								data-ng-model="form1.start_date" min="{{form1.start_date_v | date: 'yyyy-MM-dd'}}"
-								placeholder="Enter Mobile No" ng-change="dateValidation()" ng-disabled="bookingflg">
+								placeholder="Enter Mobile No" ng-change="dateValidation()" ng-disabled="bookingflg" ng-if="!roomEditFlg">
+								
+								<input type="date" class="form-control1" 
+								data-ng-model="form1.start_date" placeholder="Enter Mobile No" ng-disabled="roomEditFlg" ng-if="roomEditFlg">
 								</div>
 						</div>
 						<div class="col-md-3">
@@ -33,24 +36,31 @@
 													<i class="fa fa-envelope-o"></i>
 								</span>
 								<input type="date" class="form-control1" data-ng-change="getRoom()" id="get_end_date"
-								data-ng-model="form1.end_date" min="{{form1.end_date_v | date: 'yyyy-MM-dd'}}" ng-disabled="bookingflg">
+								data-ng-model="form1.end_date" min="{{form1.end_date_v | date: 'yyyy-MM-dd'}}" ng-disabled="bookingflg" ng-if="!roomEditFlg">
+								
+								<input type="date" class="form-control1"
+								data-ng-model="form1.end_date" ng-disabled="roomEditFlg" ng-if="roomEditFlg">
+								
 								</div>
 						</div>
 						
-						<div class="col-md-3" data-ng-if="getroomDetails.length>0">
+						<div class="col-md-3" data-ng-if="getroomDetails.length>0 || roomEditFlg">
 								<label>Choose Room</label> 
-								<select class="form-control1" data-ng-model="form1.roomId" ng-disabled="bookingflg">
+								<select class="form-control1" data-ng-model="form1.roomId" ng-disabled="bookingflg" ng-if="!roomEditFlg">
 									<option value="{{rm.room_id}}{{','+getamountDetails(rm,weekendFlg,0)}}" data-ng-repeat="rm in getroomDetails" 
 									 data-ng-attr-title="{{rm.description}}">{{getamountDetails(rm,weekendFlg,1)}}
 									</option>
                                 </select>
-								<!--div class="input-group" ng-if="!bookingflg" ng-bind="form1.roomId">															
-								</div-->
-								
+								<br>
+								<select class="form-control1" ng-disabled="roomEditFlg" ng-if="roomEditFlg">
+									<option >{{form1.room_number+'('+ form1.description + '/' + form1.price+')'}}
+									</option>
+                                </select>
+							
 						</div>
 						
 						<div class="col-md-3" data-ng-if="getroomDetails.length>0">
-						<label>Search</label> 
+									<label>Search</label> 
 											<div class="input-group" title="Please search for exsisting customer i.e mobile number ">
 												<input type="text" data-ng-model="srch.searchId" class="form-control1"
 												placeholder="Please provide mobile number " ng-disabled="bookingflg">
@@ -58,7 +68,7 @@
 											</div>
 										</div>
 					</div>  
-					<form data-ng-if="getroomDetails.length>0"> 
+					<form data-ng-if="getroomDetails.length>0 || roomEditFlg"> 
 					<div class="form-group"> 
 						<div class="col-md-3">
 								<label>Name</label> 
@@ -86,7 +96,9 @@
 													<i class="fa fa-envelope-o"></i>
 								</span>
 								<input type="number" class="form-control1"  ng-disabled="bookingflg"
-								placeholder="Enter Age." data-ng-model="form1.age">
+								placeholder="Enter Age." data-ng-model="form1.age" ng-if="!roomEditFlg">
+								<input type="text" class="form-control1"  ng-disabled="roomEditFlg"
+								placeholder="Enter Age." data-ng-model="form1.age" ng-if="roomEditFlg">
 								</div>
 							</div>
 							
@@ -158,42 +170,60 @@
 					 <div class="row">
 					 <div class="col-md-2">  
 					 	<label>&nbsp;</label> 
-					 	<div class="input-group">							
+					 	<div class="input-group" ng-if="!roomEditFlg">							
 								<button type="submit" class="btn btn-default" data-ng-click="submit_booking()" ng-if="!bookingflg">Booking</button>
 								<button type="submit" class="btn btn-default" ng-if="bookingflg" disabled="disabled">Booking</button>
+						</div>
+						<div class="input-group" ng-if="roomEditFlg">							
+								<button type="submit" class="btn btn-default" ng-disabled="roomEditFlg">Booking</button>
 						</div>
 					 </div>
 					 <div class="col-md-2">  
 					 	<label>&nbsp;</label> 
-					 	<div class="input-group">							
+					 	<div class="input-group" ng-if="!roomEditFlg">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Add Payment</button>
 								<button type="submit" class="btn btn-default" ng-if="bookingflg" data-toggle="modal" 
 							data-target="#addPayment">Add Payment</button> 
 						</div>
+						<div class="input-group" ng-if="roomEditFlg">							
+								<button type="submit" class="btn btn-default" data-toggle="modal" 
+							data-target="#addPayment" data-ng-click="addPayment(bookingId)">Add Payment</button> 
+						</div>
 					 </div>
 					 <div class="col-md-2">  
 					 	<label>&nbsp;</label> 
-					 	<div class="input-group">							
+					 	<div class="input-group" ng-if="!roomEditFlg">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Add Guest</button> 
 								<button type="submit" class="btn btn-default" ng-if="bookingflg" data-toggle="modal" 
+							data-target="#addGust" data-ng-click="gust_init(bookingId)">Add Guest</button> 
+						</div>
+						<div class="input-group" ng-if="roomEditFlg">							
+								<button type="submit" class="btn btn-default" data-toggle="modal" 
 							data-target="#addGust" data-ng-click="gust_init(bookingId)">Add Guest</button> 
 						</div>
 					 </div>
 					 
 					 <div class="col-md-3">  
 					 	<label>&nbsp;</label> 
-					 	<div class="input-group">							
+					 	<div class="input-group" ng-if="!roomEditFlg">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">Upload Documents</button>
-								<button type="submit" class="btn btn-default" ng-if="bookingflg" ng-click="gust_doc_init(3)"
+								<button type="submit" class="btn btn-default" ng-if="bookingflg" ng-click="gust_doc_init(bookingId)"
+								data-toggle="modal" data-target="#adddoc">Upload Documents</button> 
+						</div>
+						<div class="input-group" ng-if="roomEditFlg">							
+								<button type="submit" class="btn btn-default" ng-click="gust_doc_init(bookingId)"
 								data-toggle="modal" data-target="#adddoc">Upload Documents</button> 
 						</div>
 					 </div>
 					 
 					 <div class="col-md-2">  
 					 	<label>&nbsp;</label> 
-					 	<div class="input-group">							
+					 	<div class="input-group" ng-if="!roomEditFlg">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">CheckIn</button> 
 								<button type="submit" class="btn btn-default" data-ng-click="submit(bookingId)" ng-if="bookingflg">CheckIn</button> 
+						</div>
+						<div class="input-group" ng-if="roomEditFlg">							
+								<button type="submit" class="btn btn-default" data-ng-click="submit(bookingId)">CheckIn</button> 
 						</div>
 					 </div>
 					 </div>
@@ -258,7 +288,7 @@
 							   <tr>
 								<td>
 									<select class="form-control" data-ng-model="ledger_id">
-										<option data-ng-repeat="acn in getAccountDetails" value="{{acn.ledger_id}}">
+										<option data-ng-repeat="acn in getAccountDetails" value="{{acn.ledger_id}}" ng-selected="ledger_id">
 										 {{acn.name}}
 										 </option>
 									</select>

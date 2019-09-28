@@ -215,6 +215,13 @@ class CommonModel extends CI_Model {
 	    $id =$this->db->insert_id();
 		}
 	    if($id>0){
+			$query = $this->db->query("SELECT id+1 as count FROM booking ORDER BY id DESC LIMIT 1");
+			$result = $query->result_array();
+			if(empty($result)){
+				$bkid=1;
+			}else{
+				$bkid=$result[0]['count'];
+			}
 			$checnIn = 2;
 			if(date('Y-m-d', strtotime($data->start_date))==date('Y-m-d')){
 				$checnIn = 1;
@@ -222,7 +229,7 @@ class CommonModel extends CI_Model {
 			
 	         $data_for_booking = array(
 	             'customer_id' =>$id ,
-	             'booking_number'=>date('d').date('m').date('y').$id,
+	             'booking_number'=>date('d').date('m').date('y').$bkid,
 	             'start_date' => $data->start_date.' '.date("H:i:s"),
 	             'end_date' => $data->end_date.' '.date("H:i:s"),
 	             'room_id' =>$rmPrice[0],
@@ -274,7 +281,7 @@ class CommonModel extends CI_Model {
 	}
 
 	public function getBookingDetails($data){
-		$sql = "SELECT bk.id,bk.price,cus.name , bk.start_date, bk.end_date , rm.room_number, rmcat.description FROM booking bk , room_master rm ,room_category_master rmcat,customer cus WHERE bk.customer_id = cus.id and bk.room_id=rm.id and rm.room_category_id=rmcat.id and bk.check_in = '".$data->flg."' ORDER BY bk.id DESC";
+		$sql = "SELECT bk.id,bk.price,cus.name ,cus.age,cus.gender,cus.email_id as email,cus.ph_number as m_no, bk.start_date, bk.end_date , rm.room_number, rmcat.description FROM booking bk , room_master rm ,room_category_master rmcat,customer cus WHERE bk.customer_id = cus.id and bk.room_id=rm.id and rm.room_category_id=rmcat.id and bk.check_in = '".$data->flg."' ORDER BY bk.id DESC";
 		//echo $sql;
 		//die;
 		$res = $this->db->query($sql);
@@ -294,9 +301,12 @@ class CommonModel extends CI_Model {
 	
 	public function getBookingDetailsUpdate($data)
 	{
+		if(date("Y-m-d", strtotime($data->start_date))>date("Y-m-d", strtotime($data->end_date))){
+			return false;
+		}
 		$data_ = array(
 			//'start_date'=>$data->start_date,
-			'end_date'=>$data->end_date
+			'end_date'=>$data->end_date.' '.date("H:i:s")
 		);
 		$this->db->where('id', $data->id);  
 		return $this->db->update('booking', $data_);  
