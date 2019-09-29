@@ -159,7 +159,7 @@
 								<!-- <span class="input-group-addon">
 													<i class="fa fa-envelope-o"></i>
 								</span> -->
-								<input data-ng-model="form.image" type="file" class="form-control input-sm" accept="image/*"
+								<input data-ng-model="form.imagesss" type="file" class="form-control input-sm" accept="image/*"
 	  								onchange="angular.element(this).scope().uploadedFile(this)">
 								
 								 <br/>
@@ -406,23 +406,33 @@
 							<thead>
 							  <tr>
 								  <th class="th-sm">Name</th>
-								  <th class="th-sm">Gender</th>
+								  <th class="th-sm">Id Type</th>
+								  <th class="th-sm">Id Value</th>
 								  <th class="th-sm">Documents</th>
-								  <th class="th-sm">LayOut</th>
 							  </tr>
 							 </thead>
 							 <tbody>
-							   <tr ng-repeat="doc in docForGust">
-								<td ng-bind="doc.name">
+							   <tr ng-repeat="form in docForGust">
+								<td ng-bind="form.name">
 								</td>	
-								<td ng-bind="doc.gender">
-								</td>									
+								<td><select class="form-control1" data-ng-model="form.idType1" id="idType_n">
+									<option value="{{id.id}}" data-ng-repeat="id in getIdMaster">{{id.name}}</option>
+                                </select>
+								</td>
+								<td><input type="text" class="form-control1" 
+								data-ng-model="form.idValue" id="idValue"
+								placeholder="Enter Id Value">
+								<input type="hidden" ng-model="form.customer_id" id="customer_id">
+								<input type="hidden" ng-model="form.flgofhead" id="flgofhead">						 
+								</td>								
 								<td>
-								<input data-ng-model="document" id="docId{{$index+1}}" type="file" class="form-control input-sm" 
+								<input data-ng-model="form.image" type="file" class="form-control input-sm" accept="image/*"
 	  								onchange="angular.element(this).scope().uploadedFile(this)">
+									<img ng-src="{{image_source}}" style="width:100px;">
+								<!--input data-ng-model="document" id="docId{{$index+1}}" type="file" class="form-control input-sm" 
+	  								onchange="angular.element(this).scope().uploadedFile(this)"-->
 								</td>
-								<td><!--img ng-src="{{image_source}}" style="width:100px;"-->									 
-								</td>
+								
 								</tr>
 							  </tbody>
 								  
@@ -433,7 +443,7 @@
 									</div>
 									
 									<div class="modal-footer">
-										<!--button type="button" class="btn btn-primary" data-ng-click="saveGust(bookingId)" ng-disabled="viewFlg">Add Documents</button-->
+										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId)" ng-disabled="viewFlg">Add Documents</button>
 									</div>
 								</div>
 							</div>

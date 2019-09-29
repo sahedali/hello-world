@@ -428,6 +428,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	}
 	
 	$scope.gust_doc_init = function(bookingId){
+			
 		$scope.data = {
 			"bookingId":bookingId
 		};
@@ -716,7 +717,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 			$scope.form1.id = 0;
 		}
 
-		$http.post($rootScope.baseUrl+'Booking/upload',$scope.form1)
+		$http.post($rootScope.baseUrl+'Booking/saveBooking',$scope.form1)
 	    .then(function(responces) {
 		   if(responces.data.customer_id>0){
 		   	$scope.bookingflg = true;
@@ -756,7 +757,39 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		   }
 	   });*/
 	}
-    
+    $scope.saveDocuments = function (){
+		$scope.form.image = $scope.files;
+		alert("length="+document.getElementById('idType_n').length);
+	
+	
+	
+      	$http({
+		  method  : 'POST',
+		  url     : $rootScope.baseUrl+'Booking/uploaddocuments',
+		  processData: false,
+		  transformRequest: function (data) {
+		      var formData = new FormData();
+			  formData.append("image", $scope.form.image);
+		      formData.append("data", JSON.stringify($scope.form1));  
+		      return formData;  
+		  },  
+		  data : $scope.form,
+		  headers: {
+		         'Content-Type': undefined
+		  }
+	   }).then(function(responces){
+		   if(responces.data.customer_id>0){
+		   swal({
+	              title: 'Success!',
+	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
+	              icon: 'success'
+	            }).then(function() {
+					$scope.form1 = {};
+					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
+	            });
+		   }
+	   });
+	}
 	$scope.submit = function(bookingId) {
 		
 		$scope.data = {
@@ -820,12 +853,13 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
       };
 
 	 $scope.uploadedFile = function(element) {
+			
 		    $scope.currentFile = element.files[0];
 		    var reader = new FileReader();
 		    reader.onload = function(event) {
 		      $scope.image_source = event.target.result
 		      $scope.$apply(function($scope) {
-		        $scope.files = element.files;
+		        $scope.files.push(element.files);
 		      });
 		    }
                  reader.readAsDataURL(element.files[0]);

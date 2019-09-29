@@ -29,7 +29,7 @@ class Booking extends CI_Controller
         $this->load->view('common/footer');
     } */
     
-    public function upload(){
+    public function saveBooking(){
         if(!empty($_FILES['image'])){ 
             $data = json_decode($_POST['data']);
             $customerId=$this->CommonModel->saveBooking($data);
@@ -45,6 +45,42 @@ class Booking extends CI_Controller
             //           die;
             $customerId=$this->CommonModel->saveBooking($data);
 			echo json_encode($customerId);
+        }
+    }
+	
+	 public function uploaddocuments(){
+		$params = file_get_contents('php://input');
+   if (empty($params)) {
+       $parmete2 = $_POST;
+   } else {
+       $parmete2 = json_decode($params, true);
+   }
+   print_r($parmete2['data']);
+   die;
+		 if(!isset($_FILES['image'])){
+			// echo 'hi='($_FILES['image'][0]['name']);
+			echo 'hello '.count($_FILES['image']['name']);
+		 }
+        if(!empty($_FILES['image'])){ 
+		echo 'hello '.count($_FILES['image'][0]);
+		print_r($_FILES['image']);
+		die;
+            $data = json_decode($_POST['data']);
+            $customerId=12345;//$this->CommonModel->saveBooking($data);
+            $ext = pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION);
+            $image = $customerId.'.jpg';//.$ext; //time()
+            $path =FCPATH."bower_components\\CustomarImage\\";
+			//echo 'hii'.$path.$image;
+            move_uploaded_file($_FILES["image"]["tmp_name"], $path.$image);
+            echo json_encode($customerId);
+        }else{
+			echo 'not done';
+            //$data = json_decode($_POST['data']);
+           // $data = json_decode(file_get_contents('php://input'));
+            //print_r($data);
+            //           die;
+            //$customerId=$this->CommonModel->saveBooking($data);
+			//echo json_encode($customerId);
         }
     }
     
