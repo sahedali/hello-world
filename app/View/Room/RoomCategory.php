@@ -50,7 +50,7 @@
 										<h4 class="modal-title" id="exampleModalLabel"> 
 										<span data-ng-show="addEditflag">Add</span>
 										<span data-ng-hide="addEditflag">Edit</span>
-										Room</h4>
+										Room Category</h4>
 									</div>
 									<div class="modal-body">
 										<form>

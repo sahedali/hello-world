@@ -8,22 +8,11 @@ class Home extends CI_Controller {
   }
     public function dashoard(){
         $data=$this->LoginModel->login();
-        /*if($data=="Demo"){
-            $session_array = array(
-                'firstName' =>'Demo',
-                'lastName' =>'Demo',
-                'userId' =>1000,
-                'role' =>'Admin');
-            $this->session->set_userdata('logged_in', $session_array);
-            $this->home();
-            return FALSE;
-        }*/
         if(!empty($data)){
             foreach ($data as $dt){
-                
 				$session_array = array(
-				'firstName' =>'firstName',
-				'lastName' =>'lastName',
+				'firstName' =>$dt['first_name'],
+				'lastName' =>$dt['last_name'],
 				'userId' =>$dt['id'],
 				'role' =>$dt['description']);
 			}

@@ -398,7 +398,7 @@ app.controller('RoomPriceController', function($scope,$http,$rootScope){
 });
 
 
-app.controller('BookingController', function($rootScope,$scope,$http,$filter,$routeParams){
+app.controller('BookingController', function($rootScope,$scope,$http,$filter,$routeParams){ //,Upload, $timeout
     //booking edit 
 	$scope.form = [];
 	$scope.form1 ={};
@@ -441,6 +441,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	$scope.gust_init = function(bookingId){
 		$scope.viewFlg = false;
 		$scope.gustDetails =[];
+		$scope.gustDetails1 =[];
 		$scope.data = {
 			"bookingId":bookingId
 		};
@@ -448,8 +449,9 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 			"gust_name":"",
 			"gust_age":"",
 			"gust_gnder":"",
-			"gust_id":"",
+			"gust_id":"-1",
 		};
+		$scope.gustDetails1.push(obj);
 		$http.post($rootScope.baseUrl+'Booking/getGustDetails',$scope.data)
 		  .then(function(response) {
 			  
@@ -475,17 +477,17 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 			"gust_gnder":"",
 			"gust_id":"",
 		};
-     $scope.gustDetails.push(obj);
+     $scope.gustDetails1.push(obj);
 	}
 	
 	$scope.removeRowForGust = function(){
-		$scope.gustDetails.splice($scope.gustDetails.length-1,1);
+		$scope.gustDetails1.splice($scope.gustDetails1.length-1,1);
 	}
 	
 	$scope.saveGust = function(bookingId){
 		//$scope.gustDetails.bookingId = bookingId;
 		$scope.data = {
-			"data":$scope.gustDetails,
+			"data":$scope.gustDetails1,
 			"bookingId":bookingId
 		};
 		$http.post($rootScope.baseUrl+'Booking/saveGustDetails',$scope.data)
@@ -504,27 +506,54 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	}
 	
 	$scope.addPayment = function(bookingId){
+		
+		$scope.ss={};
 		$http.get($rootScope.baseUrl+'Booking/getAccountLedgerDetails')
 		  .then(function(response) {
 		    $scope.getAccountDetails = response.data;
 		  }); 
 		  
 		  $scope.data ={"bookingId":bookingId};
+		  $http.post($rootScope.baseUrl+'Booking/exsistPaymentDetails',$scope.data)
+	        	  .then(function(response) {
+					  if(response.data>0){
+						  $scope.exsistFlag = true;
+					  }else{
+						  $scope.exsistFlag = false;
+					  }
+	        	    
+	        	  });
 		  $http.post($rootScope.baseUrl+'Booking/getPaymentDetails',$scope.data)
 	        	  .then(function(response) {
-	        	    $scope.paymentDetails = response.data;
-					$scope.payment_amount = $scope.paymentDetails[0].total_amount;
+	        	    $scope.paymentDetails_all = response.data;
 	        	  });
+		 
+		 $http.post($rootScope.baseUrl+'Booking/getBookingPaymentDetails',$scope.data)
+	        	  .then(function(response) {
+	        	    $scope.paymentDetails = response.data;
+					$scope.ss.payment_amount = $scope.paymentDetails[0].total_amount;
+	        	  });
+		  
 		  
 	}
 	
  // save payment 
+
  $scope.savePayment = function(bookingId){
-	 $scope.data = {
-		 "ledger_id":$scope.ledger_id ,
-		 "payment":$scope.payment_amount,
+	 if(!$scope.exsistFlag){
+		 $scope.data = {
+		 "ledger_id":$scope.ss.ledger_id ,
+		 "payment":$scope.ss.payment_amount,
 		 "bookingId":bookingId
 	 };
+	 }else{
+		 $scope.data = {
+		 "ledger_id":$scope.ss.ledger_ids ,
+		 "payment":$scope.ss.payment_amounts,
+		 "bookingId":bookingId
+	 }; 
+	
+	 }
 	 $http.post($rootScope.baseUrl+'Booking/savePaymentDetails',$scope.data)
 	        	  .then(function(response) {
 	        	    if(response.data>0){
@@ -599,7 +628,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	$scope.searchformobile = function (){
 		if($scope.form1.m_no.length>9){
 			$scope.data = {
-			"mobileNo":$scope.form1.m_no//$scope.srch.searchId
+			"mobileNo":$scope.form1.m_no
 		};
 		$http.post($rootScope.baseUrl+'Booking/searchCustomer',$scope.data)
   	  .then(function(response) {
@@ -611,21 +640,13 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 			  $scope.form1.age = Number(cusDetails[0].age);
 			  $scope.form1.gender = cusDetails[0].gender;
 			  $scope.form1.email = cusDetails[0].email_id;
-			  $scope.form1.m_no = cusDetails[0].ph_number;
-			  $scope.form1.idType = cusDetails[0].id_type;
-			  $scope.form1.idValue = cusDetails[0].id_value;
-			  $scope.image_source = $rootScope.baseUrl+'bower_components/CustomarImage/'+cusDetails[0].id+'.jpg';
 			  }catch(e){
 			  $scope.form1.id = "";
 			  $scope.form1.name = "";
 			  $scope.form1.age = "";
 			  $scope.form1.gender = "";
 			  $scope.form1.email = "";
-			  $scope.form1.m_no = "";
-			  $scope.form1.idType = "";
-			  $scope.form1.idValue = "";
-			  $scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
-			  }
+			 }
 		  }
   	  });
 		}else{
@@ -757,20 +778,65 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		   }
 	   });*/
 	}
-    $scope.saveDocuments = function (){
-		$scope.form.image = $scope.files;
-		alert("length="+document.getElementById('idType_n').length);
+    $scope.saveDocuments = function (bookingId,file){
+		alert(JSON.stringify($scope.docForGust));
+		
+		$http({
+		  method  : 'POST',
+		  url     : $rootScope.baseUrl+'Booking/uploaddocuments',
+		 /* processData: false,
+		  transformRequest: function (data) {
+		      var formData = new FormData();
+			  //formData.append("image", $scope.form.image);
+		      formData.append("data", JSON.stringify($scope.form));  
+		      return formData;  
+		  },  */
+		  //data : $scope.form,
+		  data : $scope.docForGust
+		 /* headers: {
+		         'Content-Type': undefined
+		  } */
+	   }).then(function(responces){
+		   if(responces.data>0){
+		   swal({
+	              title: 'Success!',
+	              text: 'Document Update Succesfully Done.',
+	              icon: 'success'
+	            }).then(function() {
+					//$scope.form1 = {};
+					// $scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
+	            });
+		   }
+	   });
+	   
+	   return false;
+		
+		$scope.docForGust.upload = Upload.upload({
+           url     : $rootScope.baseUrl+'Booking/uploaddocuments',
+            data: {
+                file: $scope.docForGust.picFile,
+                data: $scope.docForGust
+            },
+        });
+
+        $scope.docForGust.upload.then(function (response) {
+            $timeout(function () {
+                $scope.docForGust.result = response.data;
+            });
+        });
+	return false;
+		//$scope.form.image = $scope.files;
+		/*alert("length="+$scope.picFile);
 	
-	
-	
+	*/
       	$http({
 		  method  : 'POST',
 		  url     : $rootScope.baseUrl+'Booking/uploaddocuments',
 		  processData: false,
 		  transformRequest: function (data) {
 		      var formData = new FormData();
-			  formData.append("image", $scope.form.image);
-		      formData.append("data", JSON.stringify($scope.form1));  
+			  //formData.append("image", $scope.form.image);
+		      formData.append("data", JSON.stringify($scope.form));  
 		      return formData;  
 		  },  
 		  data : $scope.form,
@@ -790,6 +856,9 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		   }
 	   });
 	}
+	
+
+	
 	$scope.submit = function(bookingId) {
 		
 		$scope.data = {

@@ -113,25 +113,33 @@ class CommonModel extends CI_Model {
 			'is_active'=>1
 		);
 		$this->db->where('id', $data->id);  
-		$this->db->update('room_category_master', $data_);  
+		$flg1=$this->db->update('room_category_master', $data_);  
 
 		$roomNumber = explode(',', $data->room_id);
-		$this->db->where('room_category_id',$data->id);
-		$this->db->delete('room_master');
-
+		//$this->db->where('room_category_id',$data->id);
+		//$this->db->delete('room_master');
+	    $flg=0;
 		foreach ($roomNumber as $rm) {
-		$data_ = array(
-        'room_number'=>$rm,
-        'room_category_id'=>$data->id,
-		'created_on'=>'00-00-0000',
-		'created_by'=>1,
-        'modified_on'=>'00-00-0000',
-		'modified_by'=>1,
-		'is_active'=>1
-    	);
-		$flg = $this->db->insert('room_master',$data_);
+		$query = $this->db->query("select count(1) as count from room_master where room_number=".$rm);
+		$result = $query->result_array();
+		$ss= $result[0]['count'];
+		//echo $ss;
+		if($ss==0){
+			if($result[0]['count']==0){
+				$data_ = array(
+				'room_number'=>$rm,
+				'room_category_id'=>$data->id,
+				'created_on'=>'00-00-0000',
+				'created_by'=>1,
+				'modified_on'=>'00-00-0000',
+				'modified_by'=>1,
+				'is_active'=>1
+				);
+				$flg = $this->db->insert('room_master',$data_);
+			}
+		}
 	}
-	return $flg;
+	return $flg1;
   }
 	
 	public function deleteRoomCat ($id){
@@ -318,16 +326,19 @@ class CommonModel extends CI_Model {
 		return $res->result_array();
 	}
 	public function getPaymentDetails($data){
+		$sql = "SELECT price,pmt.payment_amount as total_amount,DATEDIFF(end_date,start_date) as number_of_days,price,booking_number,start_date,end_date ,id as booking_id ,ledger.name FROM booking bk , payment pmt,account_ledger ledger WHERE bk.id =".$data->bookingId." and bk.id = pmt.booking_id and ledger.ledger_id = pmt.ledger_id";
+		$res = $this->db->query($sql);
+		return $res->result();
+	}
+	public function getBookingPaymentDetails($data){
 		$sql = "SELECT DATEDIFF(end_date,start_date) * price as total_amount ,DATEDIFF(end_date,start_date) as number_of_days,price,booking_number,start_date , end_date ,id as booking_id FROM booking WHERE id =".$data->bookingId;
 		$res = $this->db->query($sql);
 		return $res->result();
 	}
+		
+	
 	public function savePaymentDetails($data){
 		
-		$sql = "SELECT * FROM payment WHERE booking_id = ".$data->bookingId;
-		$query = $this->db->query($sql);
-		//print_r($query->result()[0]->payment_id);
-		//die;
 		$data_ = array(
         'booking_id'=>$data->bookingId,
         'payment_amount'=>$data->payment,
@@ -339,7 +350,10 @@ class CommonModel extends CI_Model {
 		'modified_by'=>1,
 		'is_active'=>1
 		);
-		if($query->num_rows()>0){
+		$this->db->insert('payment',$data_);
+		return $this->db->insert_id();
+		
+		/*if($query->num_rows()>0){
 			//update 
 			$this->db->where('booking_id', $data->bookingId);  
 			$this->db->update('payment',$data_);
@@ -348,13 +362,23 @@ class CommonModel extends CI_Model {
 		}else{
 			$this->db->insert('payment',$data_);
 			return $this->db->insert_id();
+		}*/
+	}
+	
+	public function exsistPaymentDetails($data){
+		$sql = "SELECT * FROM payment WHERE booking_id = ".$data->bookingId;
+		$query = $this->db->query($sql);
+		if($query->num_rows()>0){
+			return 1;
 		}
+		return 0;
 	}
 	
 	public function saveGustDetails($data){
 		//print_r($data);
 		//die;
 		foreach($data->data as $dt){
+			if($dt->gust_id!=-1){
 			$tableData = array(
 				'booking_id'=>$data->bookingId,
 				'name'=>$dt->gust_name,
@@ -367,6 +391,7 @@ class CommonModel extends CI_Model {
 				'is_active'=>1
 			);
 			$this->db->insert('customer_gust',$tableData);
+			}
 		}
 		return true;
 	}
@@ -401,6 +426,28 @@ class CommonModel extends CI_Model {
 		$sql1 = "update booking set check_in =".$checkin." where id=".$bkId;
 		$this->db->query($sql1);
 		return $checkin;
+	}
+	
+	public function uploaddocuments($data){
+		foreach($data as $dt){
+			if($dt['flgofhead']==0){ // gust 
+			$tableData = array(
+				'id_type'=>$dt['idType1'],
+				'id_value'=>$dt['idValue'],
+			);
+			$this->db->where('id', $dt['customer_id']);
+			$this->db->update('customer_gust',$tableData);
+		    }
+			else{
+				$tableData = array(
+				'id_type'=>$dt['idType1'],
+				'id_value'=>$dt['idValue'],
+			);
+			$this->db->where('id', $dt['customer_id']);
+			$this->db->update('customer',$tableData);
+			}
+		}
+		echo true;
 	}
 	
 }

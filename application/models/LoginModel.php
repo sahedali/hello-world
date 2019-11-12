@@ -10,10 +10,7 @@ class LoginModel extends CI_Model {
 	{
         $userName = $this->input->post('email');
         $password = $this->input->post('password');
-        /*if($userName=="Demo" && $password=="Demo"){
-            return "Demo";
-        }*/
-        $sql ="select * from user usr,role_master rm  where usr.username ='$userName' and usr.password= '$password' and usr.role_id = rm.id";
+        $sql ="select emp.first_name, emp.last_name,usr.id,rm.description from user usr,role_master rm,employee emp where usr.username ='$userName' and usr.password= '$password' and usr.role_id = rm.id and emp.id = usr.person_id";
         $result =$this->db->query($sql);
         return $result->result_array();
 	}

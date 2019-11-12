@@ -5,7 +5,7 @@
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title row">
-				<div class="col-md-3"><h4 ng-if="!roomEditFlg">Booking Form </h4> <h4 ng-if="roomEditFlg">Booking Update Form{{bookingId}} </h4> </div>
+				<div class="col-md-3"><h4 ng-if="!roomEditFlg">Booking Form </h4> <h4 ng-if="roomEditFlg">Booking Update Form</h4> </div>
 				<div class="col-md-3"></div>
 				<div class="col-md-3"></div>
 				<div class="col-md-3"><a class="pull-right" href="#!/RoomBooking">Back</a></div>
@@ -59,14 +59,28 @@
 							
 						</div>
 						
-						<div class="col-md-3" data-ng-if="getroomDetails.length>0">
+						<!--div class="col-md-3" data-ng-if="getroomDetails.length>0">
 									<label>Search</label> 
 											<div class="input-group" title="Please search for exsisting customer i.e mobile number ">
 												<input type="text" data-ng-model="srch.searchId" class="form-control1"
 												placeholder="Please provide mobile number " ng-disabled="bookingflg">
-												<div class="input-group-addon"><span class="glyphicon glyphicon-search" data-ng-click="search()"></span></div>
+												<div class="input-group-addon"><span class="glyphicon glyphicon-search" data-ng-click="searchformobile()"></span></div>
 											</div>
-										</div>
+										</div-->
+						<div class="col-md-3" data-ng-if="getroomDetails.length>0 || roomEditFlg">
+								<label>Mobile No</label> 
+								<div class="input-group">							
+								<span class="input-group-addon">
+													<i class="fa fa-envelope-o"></i>
+								</span>
+								<input type="text" class="form-control1" ng-disabled="roomEditFlg"
+								data-ng-model="form1.m_no" ng-change="searchformobile()" ng-Trim="false"
+								placeholder="Enter Mobile No">
+								
+								
+								
+								</div>
+						</div>
 					</div>  
 					<form data-ng-if="getroomDetails.length>0 || roomEditFlg"> 
 					<div class="form-group"> 
@@ -76,7 +90,7 @@
 								<span class="input-group-addon">
 													<i class="fa fa-envelope-o"></i>
 								</span>
-								<input type="text" class="form-control1" ng-disabled="bookingflg"
+								<input type="text" class="form-control1" ng-disabled="roomEditFlg"
 								data-ng-model="form1.name"
 								placeholder="Enter Name">
 								</div>
@@ -84,7 +98,7 @@
 						
 						<div class="col-md-3">
 								<label>Select Gender</label> 
-								<select class="form-control1" data-ng-model="form1.gender" ng-disabled="bookingflg">
+								<select class="form-control1" data-ng-model="form1.gender" ng-disabled="roomEditFlg">
                                     <option value="Male">Male</option>
                                     <option value="FeMale">FeMale</option>
                                 </select>
@@ -109,7 +123,7 @@
 													<i class="fa fa-envelope-o"></i>
 								</span>
 								<input
-									type="email" class="form-control1" ng-disabled="bookingflg"
+									type="email" class="form-control1" ng-disabled="roomEditFlg"
 									placeholder="Enter Email Id." data-ng-model="form1.email">
 								</div>
 							</div>
@@ -117,55 +131,9 @@
 						</div>
 						
 						<div class="row">
-						<br>
-						<div class="col-md-3">
-								<label>Mobile No</label> 
-								<div class="input-group">							
-								<span class="input-group-addon">
-													<i class="fa fa-envelope-o"></i>
-								</span>
-								<input type="text" class="form-control1" ng-disabled="bookingflg"
-								data-ng-model="form1.m_no" ng-change="searchformobileOld()" ng-Trim="false"
-								placeholder="Enter Mobile No">
-								</div>
-						</div>
-					 
-					 <div class="col-md-3" ng-if="bookingwithcheckin">
-								<label>Id Type</label> 
-								<div class="input-group">							
-								<span class="input-group-addon">
-													<i class="fa fa-envelope-o"></i>
-								</span>
-								<select class="form-control1" data-ng-model="form1.idType">
-									<option value="{{id.id}}" data-ng-repeat="id in getIdMaster">{{id.name}}</option>
-                                </select>
-								</div>
-						</div>
-					 <div class="col-md-3" ng-if="bookingwithcheckin">
-								<label>Id Value</label> 
-								<div class="input-group">							
-								<span class="input-group-addon">
-													<i class="fa fa-envelope-o"></i>
-								</span>
-								<input type="text" class="form-control1" 
-								data-ng-model="form1.idValue"
-								placeholder="Enter Id Value">
-								</div>
-						</div>
 						
-						<div class="col-md-3" ng-if="bookingwithcheckin">
-								<label>Upload Id</label> 
-								<div class="input-group">							
-								<!-- <span class="input-group-addon">
-													<i class="fa fa-envelope-o"></i>
-								</span> -->
-								<input data-ng-model="form.imagesss" type="file" class="form-control input-sm" accept="image/*"
-	  								onchange="angular.element(this).scope().uploadedFile(this)">
-								
-								 <br/>
-	  							<img ng-src="{{image_source}}" style="width:100px;">
-								</div>
-						</div>
+											 
+					
 					 </div>
 					 <div class="row">
 					 <div class="col-md-2">  
@@ -241,11 +209,23 @@
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
-										<button type="button" class="close" id="closed" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">×</span></button>
+									<div class="form-group row">
+										<div class="col-md-4">
 										<h4 class="modal-title" id="exampleModalLabel"> 
 										<span>Add</span>
 										payment</h4>
+										</div>
+										<div class="col-md-6" style="cursor: pointer;" >
+											<!--a class="fa fa-plus pull-right" ng-click="addRowForPayment()"> </a>&nbsp;&nbsp;
+											<a class="fa fa-minus pull-right" ng-click="removeRowForPayment()"> </a-->
+											
+										</div>
+										<div class="col-md-2">
+										<button type="button" class="close" id="closed" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">×</span></button>
+										
+										</div>
+									</div>
 									</div>
 									<div class="modal-body">
 					<form>
@@ -281,20 +261,40 @@
 							<thead>
 							  <tr>
 								  <th class="th-sm">Select Account</th>
-								  <th class="th-sm">Price</th>
+								  <th class="th-sm">Price{{exsistFlag}}</th>
 							  </tr>
 							 </thead>
 							 <tbody>
-							   <tr>
+							   <tr data-ng-repeat="pay in paymentDetails_all">
 								<td>
-									<select class="form-control" data-ng-model="ledger_id">
-										<option data-ng-repeat="acn in getAccountDetails" value="{{acn.ledger_id}}" ng-selected="ledger_id">
+								{{pay.name}}
+								</td>					
+								<td>{{pay.total_amount}}</td>
+								</tr>
+							  </tbody>
+							  
+							  <tbody>
+							   <tr data-ng-if="!exsistFlag">
+								<td>
+									<select class="form-control" data-ng-model="ss.ledger_id">
+										<option data-ng-repeat="acn in getAccountDetails" value="{{acn.ledger_id}}">
 										 {{acn.name}}
 										 </option>
 									</select>
 								</td>					
-								<td><input class="form-control" id="pay_amounts" 
-								data-ng-model="payment_amount"></td>
+								<td><input class="form-control"  
+								data-ng-model="ss.payment_amount"></td>
+								</tr>
+								<tr data-ng-if="exsistFlag">
+								<td>
+									<select class="form-control" data-ng-model="ss.ledger_ids">
+										<option data-ng-repeat="acn in getAccountDetails" value="{{acn.ledger_id}}">
+										 {{acn.name}}
+										 </option>
+									</select>
+								</td>					
+								<td><input class="form-control"  
+								data-ng-model="ss.payment_amounts"></td>
 								</tr>
 							  </tbody>
 								  
@@ -321,24 +321,29 @@
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
-										<button type="button" class="close" id="closedforGust" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">×</span></button>
+									<div class="form-group row">
+										<div class="col-md-4">
 										<h4 class="modal-title" id="exampleModalLabel"> 
 										<span>Add</span>
 										Guest</h4>
+										</div>
+										<div class="col-md-6" style="cursor: pointer;" >
+											<a class="fa fa-plus pull-right" ng-click="addRowForGust()"> </a>&nbsp;&nbsp;
+											<a class="fa fa-minus pull-right" ng-click="removeRowForGust()"> </a>
+											
+										</div>
+										<div class="col-md-2">
+										<button type="button" class="close" id="closedforGust" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">×</span></button>
+										
+										</div>
+									</div>
 									</div>
 									<div class="modal-body">
 					<form>
 					
 					<div class="table-responsive bs-example widget-shadow">
-					<div class="form-group row">
-							<div class="col" style="cursor: pointer;">
-								<a class="fa fa-plus pull-right" ng-click="addRowForGust()" ng-if="!viewFlg"> </a>&nbsp;&nbsp;
-								<a class="fa fa-minus pull-right" ng-click="removeRowForGust()" ng-if="!viewFlg"> </a>
-								<a class="fa fa-plus pull-right" ng-if="viewFlg"> </a>&nbsp;&nbsp;
-								<a class="fa fa-minus pull-right" ng-if="viewFlg"> </a>
-							</div>
-						</div>
+					
 					<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 							<thead>
 							  <tr>
@@ -366,6 +371,26 @@
 								</td>
 								</tr>
 							  </tbody>
+							  
+							  <tbody>
+							   <tr ng-repeat="gst in gustDetails1" ng-if="gst.gust_id!=-1" >
+								<td>
+									<input class="form-control" id="gustName" 
+									data-ng-model="gst.gust_name" name="" required>
+								</td>					
+								<td><input class="form-control" id="gustAge"  type="text"
+									data-ng-model="gst.gust_age" value="{{gst.gust_age}}" name="" ng-maxlength="3" require></td>
+									<td><select class="form-control1" data-ng-model="gst.gust_gnder" name="">
+                                    <option value="Male">Male</option>
+                                    <option value="FeMale">FeMale</option>
+                                </select>
+								<input class="form-control" id="bookingId"  type="hidden"
+									data-ng-model="gst.bookingId" value="{{bookingId}}">
+									<input class="form-control" id="gust_id"  type="hidden"
+									data-ng-model="gst.gust_id">
+								</td>
+								</tr>
+							  </tbody>
 								  
 						</table> 
 				</div>
@@ -374,7 +399,7 @@
 									</div>
 									
 									<div class="modal-footer">
-										<button type="button" class="btn btn-primary" data-ng-click="saveGust(bookingId)" ng-disabled="viewFlg">Add Gust</button>
+										<button type="button" class="btn btn-primary" data-ng-click="saveGust(bookingId)">Add Gust</button>
 									</div>
 								</div>
 							</div>
@@ -398,17 +423,17 @@
 										Documents</h4>
 									</div>
 									<div class="modal-body">
-					<form>
+					<form name="myForm">
 					
 					<div class="table-responsive bs-example widget-shadow">
-					
+					 <fieldset>
 					<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
 							<thead>
 							  <tr>
 								  <th class="th-sm">Name</th>
 								  <th class="th-sm">Id Type</th>
 								  <th class="th-sm">Id Value</th>
-								  <th class="th-sm">Documents</th>
+								  <!--th class="th-sm">Documents</th-->
 							  </tr>
 							 </thead>
 							 <tbody>
@@ -425,26 +450,33 @@
 								<input type="hidden" ng-model="form.customer_id" id="customer_id">
 								<input type="hidden" ng-model="form.flgofhead" id="flgofhead">						 
 								</td>								
-								<td>
-								<input data-ng-model="form.image" type="file" class="form-control input-sm" accept="image/*"
+								<!--td>
+								 <input type="file" ngf-select ng-model="form.picFile" name="file" accept="image/*" ngf-max-size="2MB" required> <i ng-show="myForm.file.$error.required">*required</i>
+                                <img ngf-thumbnail="form.picFile" class="thumb">
+                                <button ng-click="picFile = null" ng-show="form.picFile">Remove</button>
+								 <br>
+								 <img ng-src="{{form.picFile.progress}}" style="width:100px;">
+                                </td>
+								<!--<input data-ng-model="form.image" type="file" class="form-control input-sm" accept="image/*"
 	  								onchange="angular.element(this).scope().uploadedFile(this)">
 									<img ng-src="{{image_source}}" style="width:100px;">
 								<!--input data-ng-model="document" id="docId{{$index+1}}" type="file" class="form-control input-sm" 
 	  								onchange="angular.element(this).scope().uploadedFile(this)"-->
-								</td>
+								
 								
 								</tr>
 							  </tbody>
 								  
-						</table> 
+						</table> <div class="modal-footer">
+										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId)" ng-disabled="viewFlg">Add Documents</button>
+									</div>
+						 </fieldset>
 				</div>
 										
 					</form>
 									</div>
 									
-									<div class="modal-footer">
-										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId)" ng-disabled="viewFlg">Add Documents</button>
-									</div>
+									
 								</div>
 							</div>
 			</div>

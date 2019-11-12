@@ -47,6 +47,11 @@ var BASE_URL ="<?php echo base_url();?>";
 <!-- angular js  -->
 <script src="<?php echo base_url();?>bower_components/angularJs/angular.js"></script>
 <script src="<?php echo base_url();?>bower_components/angularJs/angular-route.js"></script>
+
+<!-- multi file upload -->
+<script src="https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js"></script>
+<script src="https://angular-file-upload.appspot.com/js/ng-file-upload.js"></script>
+
 <!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.js"></script-->
 <script src="<?php echo base_url();?>bower_components/angularJs/ui-bootstrap-tpls-0.3.0.min.js"></script>
 	<!-- MY App -->
@@ -153,7 +158,7 @@ var BASE_URL ="<?php echo base_url();?>";
 			  <li class="treeview">
                 <a href="#">
                 <i class="fa fa-laptop"></i>
-                <span>Room</span>
+                <span>Master</span>
                 <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
@@ -187,11 +192,11 @@ var BASE_URL ="<?php echo base_url();?>";
 		<!-- header-starts -->
 		<div class="sticky-header header-section ">
 			<div class="header-left">
-				<!--toggle button start-->
+				<!--toggle button start
 				<button id="showLeftPush"><i class="fa fa-bars"></i></button>
 				<!--toggle button end-->
 				<div class="profile_details_left"><!--notifications of menu start -->
-					<ul class="nofitications-dropdown">
+					<!--ul class="nofitications-dropdown">
 						<li class="dropdown head-dpdn">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i><span class="badge">4</span></a>
 							<ul class="dropdown-menu">
@@ -337,7 +342,7 @@ var BASE_URL ="<?php echo base_url();?>";
 								</li>
 							</ul>
 						</li>	
-					</ul>
+					</ul-->
 					<div class="clearfix"> </div>
 				</div>
 				<!--notification menu end -->
@@ -346,7 +351,7 @@ var BASE_URL ="<?php echo base_url();?>";
 			<div class="header-right">
 				
 				
-				<!--search-box-->
+				<!--search-box
 				<div class="search-box">
 					<form class="input">
 						<input class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-31" />
@@ -363,10 +368,10 @@ var BASE_URL ="<?php echo base_url();?>";
 						<li class="dropdown profile_details_drop">
 							<a style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 								<div class="profile_img">	
-									<span class="prfil-img"><img src="<?php echo base_url();?>bower_components/images/2.jpg" alt=""> </span> 
+									<span class="prfil-img"><img src="<?php echo base_url();?>bower_components/images/<?php echo $this->session->userdata['logged_in']['userId']; ?>.jpg" alt=""> </span> 
 									<div class="user-name">
-										<p>Admin Name</p>
-										<span>Administrator</span>
+										<p><?php echo $this->session->userdata['logged_in']['firstName']; ?></p>
+										<span><?php echo $this->session->userdata['logged_in']['role']; ?></span>
 									</div>
 									<i class="fa fa-angle-down lnr"></i>
 									<i class="fa fa-angle-up lnr"></i>

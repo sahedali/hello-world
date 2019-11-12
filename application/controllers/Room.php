@@ -8,8 +8,6 @@ class Room extends CI_Controller
 
     public function __construct()
     {
-		//echo 'hi--'.date("m.d.y");
-		//die;
         parent::__construct();
         $this->load->model('CommonModel');
         //$this->load->model('ReportModel');
@@ -18,10 +16,6 @@ class Room extends CI_Controller
             redirect('Login/logout');
             return false;
         }
-    }
-    public function ssss(){
-        echo 'hi login ';
-        
     }
 	public function saveRoom(){
 		echo $this->CommonModel->saveRoom(json_decode(file_get_contents('php://input')));

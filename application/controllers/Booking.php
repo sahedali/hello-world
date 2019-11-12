@@ -55,13 +55,19 @@ class Booking extends CI_Controller
    } else {
        $parmete2 = json_decode($params, true);
    }
-   print_r($parmete2['data']);
-   die;
-		 if(!isset($_FILES['image'])){
+   return $this->CommonModel->uploaddocuments($parmete2);
+   //die;
+   
+   
+   //print_r($parmete2['data']);
+  // die;
+  print_r($parmete2['data'][0]['picFile']);
+  die;
+		 if(!isset($_FILES['picFile'])){
 			// echo 'hi='($_FILES['image'][0]['name']);
-			echo 'hello '.count($_FILES['image']['name']);
+			echo 'hello '.count($_FILES['picFile']['name']);
 		 }
-        if(!empty($_FILES['image'])){ 
+        if(!empty($_FILES['picFile'])){ 
 		echo 'hello '.count($_FILES['image'][0]);
 		print_r($_FILES['image']);
 		die;
@@ -113,6 +119,16 @@ class Booking extends CI_Controller
 	public function getPaymentDetails(){
 		echo json_encode($this->CommonModel->getPaymentDetails(json_decode(file_get_contents('php://input'))));
 	}
+	
+	public function exsistPaymentDetails(){
+		echo json_encode($this->CommonModel->exsistPaymentDetails(json_decode(file_get_contents('php://input'))));
+	}
+	
+	
+	public function getBookingPaymentDetails(){
+		echo json_encode($this->CommonModel->getBookingPaymentDetails(json_decode(file_get_contents('php://input'))));
+	}
+	
 	public function savePaymentDetails(){
 		echo json_encode($this->CommonModel->savePaymentDetails(json_decode(file_get_contents('php://input'))));
 	}
