@@ -433,7 +433,7 @@
 								  <th class="th-sm">Name</th>
 								  <th class="th-sm">Id Type</th>
 								  <th class="th-sm">Id Value</th>
-								  <!--th class="th-sm">Documents</th-->
+								  <th class="th-sm">Documents</th>
 							  </tr>
 							 </thead>
 							 <tbody>
@@ -450,13 +450,20 @@
 								<input type="hidden" ng-model="form.customer_id" id="customer_id">
 								<input type="hidden" ng-model="form.flgofhead" id="flgofhead">						 
 								</td>								
-								<!--td>
+								<td>
 								 <input type="file" ngf-select ng-model="form.picFile" name="file" accept="image/*" ngf-max-size="2MB" required> <i ng-show="myForm.file.$error.required">*required</i>
-                                <img ngf-thumbnail="form.picFile" class="thumb">
-                                <button ng-click="picFile = null" ng-show="form.picFile">Remove</button>
+                                <img ngf-thumbnail="form.picFile" class="thumb" style="width:100px;">
+                                </td>
+                                <!--td ng-if="form.idType1>0">
+                                	<img ng-src="{{baseUrl}}/bower_components/CustomarImage/{{form.picFile}}.jpg" style="width:100px;">
+                                </td-->
+								 <!--input type="file" ngf-select ng-model="form.picFile" name="file" accept="image/*" ngf-max-size="2MB" required> <i ng-show="myForm.file.$error.required">*required</i-->
+                                <!--img ngf-thumbnail="form.picFile" class="thumb" style="width:100px;"-->
+                                
+                                <!--button ng-click="picFile = null" ng-show="form.picFile">Remove</button>
 								 <br>
 								 <img ng-src="{{form.picFile.progress}}" style="width:100px;">
-                                </td>
+                                
 								<!--<input data-ng-model="form.image" type="file" class="form-control input-sm" accept="image/*"
 	  								onchange="angular.element(this).scope().uploadedFile(this)">
 									<img ng-src="{{image_source}}" style="width:100px;">
@@ -468,8 +475,8 @@
 							  </tbody>
 								  
 						</table> <div class="modal-footer">
-										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId)" ng-disabled="viewFlg">Add Documents</button>
-									</div>
+										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId,picFile)">Add Documents</button>
+									</div> <!--  ng-disabled="viewFlg" -->
 						 </fieldset>
 				</div>
 										

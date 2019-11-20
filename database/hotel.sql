@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2019 at 05:52 PM
--- Server version: 10.1.33-MariaDB
--- PHP Version: 7.2.6
+-- Generation Time: Nov 20, 2019 at 10:25 PM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.1.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -33,7 +33,7 @@ CREATE TABLE `account_ledger` (
   `name` varchar(50) NOT NULL,
   `desc` varchar(255) NOT NULL,
   `account_type_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -82,7 +82,7 @@ CREATE TABLE `booking` (
   `category_name` varchar(50) NOT NULL,
   `room_number` int(11) NOT NULL,
   `price` double(10,2) NOT NULL,
-  `check_in` int(11) NOT NULL DEFAULT '0' COMMENT '1=checkin,2=advance,3=checkout',
+  `check_in` int(11) NOT NULL DEFAULT 0 COMMENT '1=checkin,2=advance,3=checkout',
   `created_on` date NOT NULL,
   `created_by` int(11) NOT NULL,
   `modified_on` date NOT NULL,
@@ -95,8 +95,9 @@ CREATE TABLE `booking` (
 --
 
 INSERT INTO `booking` (`id`, `customer_id`, `booking_number`, `start_date`, `end_date`, `room_id`, `category_name`, `room_number`, `price`, `check_in`, `created_on`, `created_by`, `modified_on`, `modified_by`, `is_active`) VALUES
-(1, 2, '0911191', '2019-11-09 19:15:38', '2019-11-12 19:15:38', 54, 'Family Suite', 102, 2400.00, 0, '0000-00-00', 1, '0000-00-00', 1, 1),
-(2, 2, '1011192', '2019-11-13 01:54:14', '2019-11-16 01:54:14', 54, 'Family Suite 4', 102, 2400.00, 0, '0000-00-00', 1, '0000-00-00', 1, 1);
+(1, 1, '0911191', '2019-11-09 19:15:38', '2019-11-12 19:15:38', 54, 'Family Suite', 102, 2400.00, 0, '0000-00-00', 1, '0000-00-00', 1, 1),
+(2, 2, '1011192', '2019-11-13 01:54:14', '2019-11-16 01:54:14', 54, 'Family Suite 4', 102, 2400.00, 0, '0000-00-00', 1, '0000-00-00', 1, 1),
+(3, 2, '1911193', '2019-12-12 19:54:29', '2019-12-15 19:56:32', 48, 'Suite Double', 302, 1000.00, 2, '0000-00-00', 1, '0000-00-00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -125,8 +126,8 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `name`, `age`, `gender`, `email_id`, `ph_number`, `id_type`, `id_value`, `created_on`, `created_by`, `modified_on`, `modified_by`, `is_active`) VALUES
-(1, 'Sahed Ali', 23, 'Male', 'sahedali51@gmail.com', '8609024837', 0, '0', '0000-00-00', 1, '0000-00-00', 1, 1),
-(2, 'Sahed', 23, 'Male', 'sahedali51@gmail.com', '8609024873', 0, '0', '0000-00-00', 1, '0000-00-00', 1, 1);
+(1, 'Sahed Ali', 23, 'Male', 'sahedali51@gmail.com', '8609024837', 1, '23457', '0000-00-00', 1, '0000-00-00', 1, 1),
+(2, 'Sahed', 23, 'Male', 'sahedali51@gmail.com', '8609024873', 1, '111', '0000-00-00', 1, '0000-00-00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -143,9 +144,9 @@ CREATE TABLE `customer_gust` (
   `id_type` int(11) NOT NULL,
   `id_value` varchar(50) NOT NULL,
   `created_by` int(11) NOT NULL,
-  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_on` timestamp NOT NULL DEFAULT current_timestamp(),
   `modified_by` int(11) NOT NULL,
-  `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_on` timestamp NOT NULL DEFAULT current_timestamp(),
   `is_active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -155,8 +156,11 @@ CREATE TABLE `customer_gust` (
 
 INSERT INTO `customer_gust` (`id`, `booking_id`, `name`, `age`, `gender`, `id_type`, `id_value`, `created_by`, `created_on`, `modified_by`, `modified_on`, `is_active`) VALUES
 (7, 5, 'ssss', 23, 'Male', 0, '', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
-(8, 1, 'test', 23, 'Male', 4, '44', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
-(9, 1, 'TEST2', 24, 'Male', 0, '', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
+(8, 1, 'test', 23, 'Male', 2, '12345789', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(9, 1, 'TEST2', 24, 'Male', 4, '09875432', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(10, 3, 'afrin', 20, 'Male', 4, '', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(11, 2, 'Afrin', 20, 'FeMale', 2, '222', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(12, 2, 'assssff', 24, 'FeMale', 4, '2222', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -224,11 +228,11 @@ CREATE TABLE `payment` (
   `booking_id` int(11) NOT NULL,
   `payment_amount` decimal(10,2) NOT NULL,
   `ledger_id` int(11) NOT NULL,
-  `payment_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_by` int(11) NOT NULL,
-  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_on` timestamp NOT NULL DEFAULT current_timestamp(),
   `modified_by` int(11) NOT NULL,
-  `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_on` timestamp NOT NULL DEFAULT current_timestamp(),
   `is_active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -241,7 +245,10 @@ INSERT INTO `payment` (`payment_id`, `booking_id`, `payment_amount`, `ledger_id`
 (2, 4, '45.00', 2, '2019-11-08 21:02:58', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
 (3, 4, '890.00', 3, '2019-11-08 21:03:11', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
 (4, 5, '2600.00', 1, '2019-11-09 10:47:03', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
-(5, 5, '200.00', 2, '2019-11-09 10:47:22', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
+(5, 5, '200.00', 2, '2019-11-09 10:47:22', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(6, 3, '3000.00', 1, '2019-11-20 11:19:40', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(7, 3, '200.00', 2, '2019-11-20 11:19:49', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(8, 3, '500.00', 3, '2019-11-20 11:19:57', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -498,7 +505,7 @@ ALTER TABLE `account_type`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -510,7 +517,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `customer_gust`
 --
 ALTER TABLE `customer_gust`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -528,7 +535,7 @@ ALTER TABLE `id_master`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `price_detail`

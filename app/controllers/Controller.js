@@ -398,7 +398,7 @@ app.controller('RoomPriceController', function($scope,$http,$rootScope){
 });
 
 
-app.controller('BookingController', function($rootScope,$scope,$http,$filter,$routeParams){ //,Upload, $timeout
+app.controller('BookingController', function($rootScope,$scope,$http,$filter,$routeParams,Upload, $timeout){ //
     //booking edit 
 	$scope.form = [];
 	$scope.form1 ={};
@@ -779,82 +779,50 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	   });*/
 	}
     $scope.saveDocuments = function (bookingId,file){
-		alert(JSON.stringify($scope.docForGust));
-		
-		$http({
-		  method  : 'POST',
-		  url     : $rootScope.baseUrl+'Booking/uploaddocuments',
-		 /* processData: false,
-		  transformRequest: function (data) {
-		      var formData = new FormData();
-			  //formData.append("image", $scope.form.image);
-		      formData.append("data", JSON.stringify($scope.form));  
-		      return formData;  
-		  },  */
-		  //data : $scope.form,
-		  data : $scope.docForGust
-		 /* headers: {
-		         'Content-Type': undefined
-		  } */
-	   }).then(function(responces){
-		   if(responces.data>0){
-		   swal({
-	              title: 'Success!',
-	              text: 'Document Update Succesfully Done.',
-	              icon: 'success'
-	            }).then(function() {
-					//$scope.form1 = {};
-					// $scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
-	            });
-		   }
-	   });
-	   
-	   return false;
-		
-		$scope.docForGust.upload = Upload.upload({
-           url     : $rootScope.baseUrl+'Booking/uploaddocuments',
-            data: {
-                file: $scope.docForGust.picFile,
-                data: $scope.docForGust
-            },
-        });
 
-        $scope.docForGust.upload.then(function (response) {
-            $timeout(function () {
-                $scope.docForGust.result = response.data;
-            });
-        });
-	return false;
-		//$scope.form.image = $scope.files;
-		/*alert("length="+$scope.picFile);
+			var fd = new FormData();
 	
-	*/
-      	$http({
-		  method  : 'POST',
-		  url     : $rootScope.baseUrl+'Booking/uploaddocuments',
-		  processData: false,
-		  transformRequest: function (data) {
-		      var formData = new FormData();
-			  //formData.append("image", $scope.form.image);
-		      formData.append("data", JSON.stringify($scope.form));  
-		      return formData;  
-		  },  
-		  data : $scope.form,
-		  headers: {
-		         'Content-Type': undefined
-		  }
-	   }).then(function(responces){
-		   if(responces.data.customer_id>0){
-		   swal({
-	              title: 'Success!',
-	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
-	              icon: 'success'
-	            }).then(function() {
-					$scope.form1 = {};
-					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
-	            });
-		   }
-	   });
+  			fd.append("gust_details",JSON.stringify($scope.docForGust));
+    			for(var i=0;i<$scope.docForGust.length;i++){
+
+    				if($scope.docForGust[i].idType1== undefined || $scope.docForGust[i].idType1== '' ||  $scope.docForGust[i].idValue== undefined || $scope.docForGust[i].idValue== ''){
+    					alert("please fill up all data");
+    					return false;
+    				}
+
+    				if($scope.docForGust[i].picFile== undefined || $scope.docForGust[i].picFile==''){
+    					alert("please fill up the all images first");
+    					return false;
+
+    				}
+    					fd.append('file[]', $scope.docForGust[i].picFile);
+    				}
+
+    			
+
+    				$http({
+                        url: $rootScope.baseUrl+'Booking/uploaddocuments',//or your add enquiry services
+                        method: "POST",
+						 headers: { 'Content-Type': undefined },
+						 data :fd		 
+                    }).success(function(data, status, headers, config) {
+                       $scope.status=data.status;
+						 if($scope.status==1)
+						 {
+						 	 alert(data.message);
+						   $scope.formdata="";
+						   $scope.myform.$setPristine();//for flush all the validation errors/messages previously
+						  
+						 }
+						 else
+						 {
+						  alert(data.message);
+						 }
+                         
+                    }).error(function(data, status, headers, config) {
+                         alert("Something Error in form process");
+                    });
+
 	}
 	
 

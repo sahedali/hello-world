@@ -403,9 +403,9 @@ class CommonModel extends CI_Model {
 	}
 	
 	public function getCustomerDetails ($data){
-		$sql ="SELECT cus.name,cus.age,cus.gender,cus.id as customer_id, 1 as 'flgofhead' from customer cus , booking bk where bk.customer_id = cus.id and bk.id = ".$data->bookingId." 
+		$sql ="SELECT cus.name,cus.age,cus.gender,cus.id as customer_id, 1 as 'flgofhead',id_type as idType1,id_value as idValue,cus.id as picFile from customer cus , booking bk where bk.customer_id = cus.id and bk.id = ".$data->bookingId." 
 				UNION 
-		       SELECT gst.name,gst.age,gst.gender,gst.id as customer_id,0 as 'flgofhead' FROM booking bk , customer_gust gst WHERE 	bk.id = gst.booking_id  and bk.id =".$data->bookingId;
+		       SELECT gst.name,gst.age,gst.gender,gst.id as customer_id,0 as 'flgofhead',id_type as idType1,id_value as idValue,gst.id as picFile FROM booking bk , customer_gust gst WHERE 	bk.id = gst.booking_id  and bk.id =".$data->bookingId;
 		$res = $this->db->query($sql);
 		return $res->result();
 	}
@@ -428,26 +428,28 @@ class CommonModel extends CI_Model {
 		return $checkin;
 	}
 	
-	public function uploaddocuments($data){
+	public function uploaddocuments($data,$images){
+		$i=0;
+		$flg = false;
 		foreach($data as $dt){
-			if($dt['flgofhead']==0){ // gust 
 			$tableData = array(
-				'id_type'=>$dt['idType1'],
-				'id_value'=>$dt['idValue'],
+				'id_type'=>$dt->idType1,
+				'id_value'=>$dt->idValue,
 			);
-			$this->db->where('id', $dt['customer_id']);
+			$this->db->where('id', $dt->customer_id);
+
+			if($dt->flgofhead==0){ // gust 
 			$this->db->update('customer_gust',$tableData);
 		    }
 			else{
-				$tableData = array(
-				'id_type'=>$dt['idType1'],
-				'id_value'=>$dt['idValue'],
-			);
-			$this->db->where('id', $dt['customer_id']);
 			$this->db->update('customer',$tableData);
 			}
+            $image = $dt->customer_id.'.jpg';
+            $path =FCPATH."bower_components\\CustomarImage\\";
+            $flg=move_uploaded_file($images["tmp_name"][$i], $path.$image); 
+            $i++;
 		}
-		echo true;
+		return $flg;
 	}
 	
 }
