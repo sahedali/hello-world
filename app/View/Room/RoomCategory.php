@@ -1,15 +1,14 @@
 <div id="page-wrapper" data-ng-controller="RoomCategoryController" data-ng-init="init()">
 	<div class="main-page">
 		<div class="forms">
-			<h2 class="title1">Room Category</h2>
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title">
-					<h4>Room Category Add<a title="Cleck to Add Room Category" class="btn fa fa-plus pull-right" data-toggle="modal" 
-		data-target="#exampleModal" data-ng-click="addRoomCat()"> </a> </h4>
+					<h5>Room Category Add<a title="Cleck to Add Room Category" class="btn fa fa-plus pull-right" data-toggle="modal" 
+		data-target="#exampleModal" data-ng-click="addRoomCat()"> </a> </h5>
 				</div>
 				<div class="table-responsive bs-example widget-shadow">
-				 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+				 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" style="font-size: 13px">
 					<thead>
                       <tr><th class="th-sm">Sl No</th>
                           <th class="th-sm">Category</th>

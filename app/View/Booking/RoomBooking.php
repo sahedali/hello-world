@@ -1,7 +1,6 @@
 <div id="page-wrapper" data-ng-controller="RoomCustomerBookingController" data-ng-init="init()">
 	<div class="main-page">
 		<div class="forms">
-			<h2 class="title1">Room Booking</h2>
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title row">
@@ -30,8 +29,8 @@
 						  <th class="th-sm">Prices</th>
 						  <th class="th-sm">Room Desc <div class="col-md-3"></div></th>
 						  <th class="th-sm" ng-if="bookingStatus==0">Pending Action</th>
-						  <th class="th-sm" ng-if="bookingStatus==1">Check  Out</th>
-						  <th class="th-sm" ng-if="bookingStatus==2">Check  In</th>
+						  <th class="th-sm" ng-if="bookingStatus==1">Check  Out/View</th>
+						  <th class="th-sm" ng-if="bookingStatus==2">Check  In/View</th>
 						  <th class="th-sm" ng-if="bookingStatus==3">Status</th>
                        </tr>
                        </thead>
@@ -56,8 +55,8 @@
 							data-target="#exampleModal" 
 							data-ng-click="editRoomBooking(bk)">{{bk.description}}</td>
 						<td data-ng-if="bookingStatus==0" data-ng-click="getBookingDetailss(bk)"><a>Next</a></td>
-						<td data-ng-if="bookingStatus==1"><a>Submit</a></td>
-						<td data-ng-if="bookingStatus==2"><a>Submit Check in</a></td>
+						<td data-ng-if="bookingStatus==1" data-ng-click="getBookingDetailss(bk)"><a>Submit</a></td>
+						<td data-ng-if="bookingStatus==2" data-ng-click="getBookingDetailss(bk)"><a>Submit</a></td>
 						<!--td data-ng-if="bookingStatus==3">Ok</td-->
                         </tr>
                        </tbody>

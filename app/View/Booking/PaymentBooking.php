@@ -1,7 +1,6 @@
 <div id="page-wrapper" data-ng-controller="BookingController" data-ng-init="init()">
 	<div class="main-page">
 		<div class="forms">
-			<h2 class="title1">Room Booking</h2>
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title row">

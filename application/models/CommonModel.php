@@ -289,7 +289,7 @@ class CommonModel extends CI_Model {
 	}
 
 	public function getBookingDetails($data){
-		$sql = "SELECT bk.id,bk.price,cus.name ,cus.age,cus.gender,cus.email_id as email,cus.ph_number as m_no, bk.start_date, bk.end_date , rm.room_number, rmcat.description FROM booking bk , room_master rm ,room_category_master rmcat,customer cus WHERE bk.customer_id = cus.id and bk.room_id=rm.id and rm.room_category_id=rmcat.id and bk.check_in = '".$data->flg."' ORDER BY bk.id DESC";
+		$sql = "SELECT bk.id,bk.price,cus.name ,cus.age,cus.gender,cus.email_id as email,cus.ph_number as m_no, bk.start_date, bk.end_date , rm.room_number, rmcat.description,bk.check_in FROM booking bk , room_master rm ,room_category_master rmcat,customer cus WHERE bk.customer_id = cus.id and bk.room_id=rm.id and rm.room_category_id=rmcat.id and bk.check_in = '".$data->flg."' ORDER BY bk.id DESC";
 		//echo $sql;
 		//die;
 		$res = $this->db->query($sql);
@@ -327,15 +327,17 @@ class CommonModel extends CI_Model {
 	}
 	public function getPaymentDetails($data){
 		$sql = "SELECT price,pmt.payment_amount as total_amount,DATEDIFF(end_date,start_date) as number_of_days,price,booking_number,start_date,end_date ,id as booking_id ,ledger.name FROM booking bk , payment pmt,account_ledger ledger WHERE bk.id =".$data->bookingId." and bk.id = pmt.booking_id and ledger.ledger_id = pmt.ledger_id";
+		//echo $sql;
+		//die;
 		$res = $this->db->query($sql);
 		return $res->result();
 	}
 	public function getBookingPaymentDetails($data){
-		$sql = "SELECT DATEDIFF(end_date,start_date) * price as total_amount ,DATEDIFF(end_date,start_date) as number_of_days,price,booking_number,start_date , end_date ,id as booking_id FROM booking WHERE id =".$data->bookingId;
+		$sql = "SELECT DATEDIFF(end_date,start_date) * price as total_amount ,'room rant' as ledger_name ,DATEDIFF(end_date,start_date) as number_of_days,price,booking_number,start_date , end_date ,id as booking_id FROM booking WHERE id =".$data->bookingId;
 		$res = $this->db->query($sql);
 		return $res->result();
 	}
-		
+
 	
 	public function savePaymentDetails($data){
 		
@@ -403,11 +405,18 @@ class CommonModel extends CI_Model {
 	}
 	
 	public function getCustomerDetails ($data){
-		$sql ="SELECT cus.name,cus.age,cus.gender,cus.id as customer_id, 1 as 'flgofhead',id_type as idType1,id_value as idValue,cus.id as picFile from customer cus , booking bk where bk.customer_id = cus.id and bk.id = ".$data->bookingId." 
+
+		$sql ="SELECT cus.name,cus.age,cus.gender,cus.id as customer_id, 1 as 'flgofhead',id_type as idType1,id_value as idValue,cus.id as image_id from customer cus , booking bk where bk.customer_id = cus.id and bk.id = ".$data->bookingId." 
 				UNION 
-		       SELECT gst.name,gst.age,gst.gender,gst.id as customer_id,0 as 'flgofhead',id_type as idType1,id_value as idValue,gst.id as picFile FROM booking bk , customer_gust gst WHERE 	bk.id = gst.booking_id  and bk.id =".$data->bookingId;
+		       SELECT gst.name,gst.age,gst.gender,gst.id as customer_id,0 as 'flgofhead',id_type as idType1,id_value as idValue,gst.id as image_id FROM booking bk , customer_gust gst WHERE 	bk.id = gst.booking_id  and bk.id =".$data->bookingId;
 		$res = $this->db->query($sql);
 		return $res->result();
+
+		/*$sql ="SELECT cus.name,cus.age,cus.gender,cus.id as customer_id, 1 as 'flgofhead',id_type as idType1,id_value as idValue from customer cus , booking bk where bk.customer_id = cus.id and bk.id = ".$data->bookingId." 
+				UNION 
+		       SELECT gst.name,gst.age,gst.gender,gst.id as customer_id,0 as 'flgofhead',id_type as idType1,id_value as idValue FROM booking bk , customer_gust gst WHERE 	bk.id = gst.booking_id  and bk.id =".$data->bookingId;
+		$res = $this->db->query($sql);
+		return $res->result();*/
 	}
 	
 	public function requestForCheckIN($data){
@@ -417,6 +426,9 @@ class CommonModel extends CI_Model {
 		$start_date = "";
 		foreach($res->result() as $data){
 			$start_date = $data->start_date;
+		}
+		if(date("Y-m-d")>$start_date){
+			return -1; // booking not excepted
 		}
 		if(date("Y-m-d") == $start_date){
 			$checkin = 1;
@@ -451,6 +463,45 @@ class CommonModel extends CI_Model {
 		}
 		return $flg;
 	}
-	
+
+
+	public function paymentandCheckout($data){
+
+		$sql = "select STR_TO_DATE(end_date, '%Y-%m-%d') as end_date from booking where id=".$data->booking_id;
+		$res = $this->db->query($sql);
+		$end_date = "";
+		foreach($res->result() as $data){
+			$end_date = $data->end_date;
+		}
+		//echo date("Y-m-d");
+		//echo 'hi ==='.$end_date;
+		if(date("Y-m-d")!=$end_date){
+			return false; // booking not excepted
+		}
+
+		if($data->flg == 0){ // pay and checkout 
+			$tableData = array(
+				'booking_id'=>$data->booking_id,
+				'payable_amount'=>$data->total_amount,
+				'payment_type' =>$data->payment_mode,
+				'pay_transaction_id' =>$data->tran_id,
+				'feedback'=>$data->feedback,
+				'created_on'=>'00-00-0000',
+				'created_by'=>1,
+		        'modified_on'=>'00-00-0000',
+				'modified_by'=>1,
+				'is_active'=>1
+			);
+		 $this->db->insert(' final_payment',$tableData);
+		 if($this->db->insert_id()>0){
+		 	$sql ="update booking SET check_in=3 where id=".$data->booking_id;
+		 	return $this->db->query($sql);
+		 }
+
+		}else{ //only checkout 
+			$sql ="update booking SET check_in=3 where id=".$data->booking_id;
+			return $this->db->query($sql);
+		}
+	}
 }
 

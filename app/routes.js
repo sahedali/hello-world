@@ -6,9 +6,11 @@ app.config(['$routeProvider',function($routeProvider,$locationProvider){
 		templateUrl :'../app/View/Home.html'
 	})
 	.when('/RoomCategory',{
+		//controller: '../app/Controller/RoomCategory',
 		templateUrl :'../app/View/Room/RoomCategory.php'
 	})
 	.when('/RoomMaster',{
+		//controller: 'RoomCategory',
 		templateUrl :'../app/View/Room/RoomView.php'
 	})
 	.when('/RoomPrice',{
@@ -32,4 +34,12 @@ app.config(['$routeProvider',function($routeProvider,$locationProvider){
 }])
 app.run(function($rootScope) {
     $rootScope.baseUrl = "http://localhost/Hotel/";
+    $rootScope.swal= function(title,text,icon){
+	swal({
+	              title: title,//'Required Error!',
+	              text: text,//'Please provied all field.',
+	              icon: icon//'error'
+	            }).then(function() {
+	            });
+}
 });

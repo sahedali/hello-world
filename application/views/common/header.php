@@ -49,8 +49,8 @@ var BASE_URL ="<?php echo base_url();?>";
 <script src="<?php echo base_url();?>bower_components/angularJs/angular-route.js"></script>
 
 <!-- multi file upload -->
-<script src="https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js"></script>
-<script src="https://angular-file-upload.appspot.com/js/ng-file-upload.js"></script>
+<script src="<?php echo base_url();?>bower_components/angularJs/ng-file-upload-shim.js"></script>
+<script src="<?php echo base_url();?>bower_components/angularJs/ng-file-upload.js"></script>
 
 <!--script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-route.js"></script-->
 <script src="<?php echo base_url();?>bower_components/angularJs/ui-bootstrap-tpls-0.3.0.min.js"></script>
@@ -170,7 +170,7 @@ var BASE_URL ="<?php echo base_url();?>";
               
               <li class="treeview">
                 <a href="#">
-                <i class="fa fa-laptop"></i>
+                <i class="fa fa-book"></i>
                 <span>Room Booking</span>
                 <i class="fa fa-angle-left pull-right"></i>
                 </a>

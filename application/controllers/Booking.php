@@ -121,5 +121,12 @@ class Booking extends CI_Controller
 		echo json_encode($this->CommonModel->requestForCheckIN(json_decode(file_get_contents('php://input'))));
 	}
 	
-	    
+    public function getCRPaymentDetails(){
+        echo json_encode($this->CommonModel->getCRPaymentDetails(json_decode(file_get_contents('php://input'))));
+    }
+	  
+    public function paymentandCheckout(){
+        echo json_encode($this->CommonModel->paymentandCheckout(json_decode(file_get_contents('php://input'))));
+    } 
+     
 }

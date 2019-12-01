@@ -1,12 +1,11 @@
 <div id="page-wrapper" data-ng-controller="RoomController" data-ng-init="init()">
 	<div class="main-page">
 		<div class="forms">
-			<h2 class="title1">Room</h2>
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title">
-					<h4>Room Add Form <a class="fa fa-plus pull-right" data-toggle="modal" 
-		data-target="#exampleModal" data-ng-click="addRoom()"> </a> </h4>
+					<h5>Room Add Form <a class="fa fa-plus pull-right" data-toggle="modal" 
+		data-target="#exampleModal" data-ng-click="addRoom()"> </a> </h5>
 				</div>
 				<div class="table-responsive bs-example widget-shadow">
 				 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">

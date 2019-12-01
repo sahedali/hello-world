@@ -1,7 +1,7 @@
 <div id="page-wrapper" data-ng-controller="BookingController" data-ng-init="init()">
 	<div class="main-page">
 		<div class="forms">
-			<h2 class="title1">Room Booking</h2>
+			
 			<div class="form-grids row widget-shadow"
 				data-example-id="basic-forms">
 				<div class="form-title row">
@@ -184,7 +184,7 @@
 						</div>
 					 </div>
 					 
-					 <div class="col-md-2">  
+					 <div class="col-md-2" ng-if="form1.check_in!=1">  
 					 	<label>&nbsp;</label> 
 					 	<div class="input-group" ng-if="!roomEditFlg">							
 								<button type="submit" class="btn btn-default" disabled="disabled" ng-if="!bookingflg">CheckIn</button> 
@@ -192,6 +192,14 @@
 						</div>
 						<div class="input-group" ng-if="roomEditFlg">							
 								<button type="submit" class="btn btn-default" data-ng-click="submit(bookingId)">CheckIn</button> 
+						</div>
+					 </div>
+
+					 <div class="col-md-2" ng-if="form1.check_in==1">  
+					 	<label>&nbsp;</label> 
+					 	
+						<div class="input-group">							
+							<button type="submit" class="btn btn-default" data-toggle="modal" data-target="#checkout" data-ng-click="checkout(bookingId)">CheckOut</button> 
 						</div>
 					 </div>
 					 </div>
@@ -261,7 +269,7 @@
 							<thead>
 							  <tr>
 								  <th class="th-sm">Select Account</th>
-								  <th class="th-sm">Price{{exsistFlag}}</th>
+								  <th class="th-sm">Price</th>
 							  </tr>
 							 </thead>
 							 <tbody>
@@ -413,7 +421,8 @@
 	
 	<div class="col-md-4 modal-grids">
 			<div class="modal fade  bd-example-modal-lg" id="adddoc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;top:100px;">
-							<div class="modal-dialog" role="document">
+							<div class="modal-dialog" role="document" style="width: 800px;
+  margin: auto;">
 								<div class="modal-content">
 									<div class="modal-header">
 										<button type="button" class="close" id="closedfordoc" data-dismiss="modal" aria-label="Close">
@@ -434,6 +443,7 @@
 								  <th class="th-sm">Id Type</th>
 								  <th class="th-sm">Id Value</th>
 								  <th class="th-sm">Documents</th>
+								  <th class="th-sm">view<a ng-click="regreshImg()"> Refresh</a></th>
 							  </tr>
 							 </thead>
 							 <tbody>
@@ -448,35 +458,22 @@
 								data-ng-model="form.idValue" id="idValue"
 								placeholder="Enter Id Value">
 								<input type="hidden" ng-model="form.customer_id" id="customer_id">
-								<input type="hidden" ng-model="form.flgofhead" id="flgofhead">						 
-								</td>								
+								<input type="hidden" ng-model="form.flgofhead" id="flgofhead">					</td>								
 								<td>
 								 <input type="file" ngf-select ng-model="form.picFile" name="file" accept="image/*" ngf-max-size="2MB" required> <i ng-show="myForm.file.$error.required">*required</i>
                                 <img ngf-thumbnail="form.picFile" class="thumb" style="width:100px;">
                                 </td>
-                                <!--td ng-if="form.idType1>0">
-                                	<img ng-src="{{baseUrl}}/bower_components/CustomarImage/{{form.picFile}}.jpg" style="width:100px;">
-                                </td-->
-								 <!--input type="file" ngf-select ng-model="form.picFile" name="file" accept="image/*" ngf-max-size="2MB" required> <i ng-show="myForm.file.$error.required">*required</i-->
-                                <!--img ngf-thumbnail="form.picFile" class="thumb" style="width:100px;"-->
-                                
-                                <!--button ng-click="picFile = null" ng-show="form.picFile">Remove</button>
-								 <br>
-								 <img ng-src="{{form.picFile.progress}}" style="width:100px;">
-                                
-								<!--<input data-ng-model="form.image" type="file" class="form-control input-sm" accept="image/*"
-	  								onchange="angular.element(this).scope().uploadedFile(this)">
-									<img ng-src="{{image_source}}" style="width:100px;">
-								<!--input data-ng-model="document" id="docId{{$index+1}}" type="file" class="form-control input-sm" 
-	  								onchange="angular.element(this).scope().uploadedFile(this)"-->
-								
-								
+                                <td> <a  href="{{baseUrl + 'bower_components/CustomarImage/'+ form.image_id+'.jpg'+'?cb=' + $index}}" target="_blank" >
+                                	<img ng-src="{{baseUrl + 'bower_components/CustomarImage/'+ form.image_id+'.jpg' +'?cb=' + $index}}" id="img_{{$index+1}}" style="width:100px;">
+                                </a>
+                                </td>
+								 
 								</tr>
 							  </tbody>
 								  
 						</table> <div class="modal-footer">
-										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId,picFile)">Add Documents</button>
-									</div> <!--  ng-disabled="viewFlg" -->
+										<button type="button" class="btn btn-primary" data-ng-click="saveDocuments(bookingId,picFile)">Save</button>
+									</div> 
 						 </fieldset>
 				</div>
 										
@@ -490,6 +487,113 @@
 </div>
 
 <!-- model end here -->
+
+
+
+
+<div class="col-md-4 modal-grids">
+			<div class="modal fade  bd-example-modal-lg" id="checkout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;top:100px;">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" id="closedfordoc" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">×</span></button>
+										<h4 class="modal-title" id="exampleModalLabel"> 
+										<span>Payment</span>
+										Details</h4>
+									</div>
+									<div class="modal-body">
+					<form name="myForm">
+					
+					<div class="table-responsive bs-example widget-shadow">
+					 <fieldset>
+					<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+							<thead>
+							  <tr>
+								  <th class="th-sm">Amount For</th>
+								  <th class="th-sm">Price</th>
+								  <th class="th-sm">CR/DR</th>
+							  </tr>
+							 </thead>
+							 <tbody>
+							   <tr data-ng-repeat="pay in paymentDetails">
+								<td>
+								{{pay.ledger_name}}
+								</td>					
+								<td>{{pay.total_amount}}</td>
+								<td>CR</td>
+								</tr>
+							  </tbody>
+							 <tbody>
+							   <tr data-ng-repeat="pay in paymentDetails_all">
+								<td>
+								{{pay.name}}
+								</td>					
+								<td>{{pay.total_amount}}</td>
+								<td>DR</td>
+								</tr>
+							  </tbody>
+
+							  <tbody>
+							   <tr>
+								<td>
+								Total
+								</td>					
+								<td>{{(total_amount_cr - total_amount_dr) | number }}</td>
+								<td>Payable Amount</td>
+								</tr>
+							  </tbody>
+							   
+						</table> 
+
+							<div class="modal-footer">
+
+								<div class="row">
+									<div class="col-md-4">
+										<input type="text" name="payable_amount" class="form-control" ng-model="total_amount">
+									</div>
+
+									<div class="col-md-4">
+										<select class="form-control pull-center" ng-model="payment_mode">
+		                                      <option value="Cash">Cash</option>
+											 <option value="Net Banking">Net Banking</option>
+											 <option value="Others UPI">Others UPI</option>
+	                        			</select>
+									</div>
+									<div class="col-md-4">
+										<input type="text" placeholder="Enter transaction ID" name="tran_id" ng-model="tran_id" class="form-control">
+									</div>
+									
+								</div>
+
+								<div class="row">
+									
+										<div class="col-md-4">
+										<textarea ng-model="feedback" placeholder="Enter your valuable feedback"></textarea>
+										</div>
+									
+									<div class="col-md-4">
+										
+									</div>
+									<div class="col-md-4">
+										<button type="button" class="btn btn-primary" ng-if="(total_amount_cr - total_amount_dr)>0" data-ng-click="paymentandCheckout(bookingId,0)">Pay & Checkout</button>
+										<button type="button" class="btn btn-primary" ng-if="(total_amount_cr - total_amount_dr)<=0" data-ng-click="paymentandCheckout(bookingId,1)">Checkout</button>
+									</div>
+								</div>
+							</div> 
+							
+						 </fieldset>
+				</div>
+										
+					</form>
+									</div>
+									
+									
+								</div>
+							</div>
+			</div>
+</div>
+
 	
 </div>
 

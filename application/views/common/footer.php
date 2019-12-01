@@ -1,5 +1,6 @@
 <!--footer-->
-    <div class="footer">
+    <div class="footer" style="
+    font-size: 10px;">
        <p>&copy; 2018 Glance Design Dashboard. All Rights Reserved | Design by>Sahed</a></p>       
     </div>
     <!--//footer-->

@@ -1,3 +1,5 @@
+
+
 app.controller('RoomController', function(dataFactory,$scope,$http,$rootScope,$routeParams){
 	
 	
@@ -351,6 +353,7 @@ app.controller('RoomPriceController', function($scope,$http,$rootScope){
 	  .then(function(response) {
 	    if(response.data==1){
 	    	document.getElementById('closed').click();
+	    	//$rootScope.swal('Update!',"Update Succesfully.",'success');//titel,msg,icone
 	    	swal({
 	              title: 'Update!',
 	              text: 'Update Succesfully.',
@@ -379,18 +382,12 @@ app.controller('RoomPriceController', function($scope,$http,$rootScope){
 	        	  .then(function(response) {
 	        	    if(response.data==1){
 	        	    	document.getElementById('closed').click();
-	        	    	swal({
-	      	              title: 'Delete!',
-	      	              text: 'Delete Succesfully.',
-	      	              icon: 'success'
-	      	            }).then(function() {
-		        			$scope.init();
-	      	            });
-	        		}
+	        	    	$rootScope.swal('Delete!',"Delete Succesfully.",'success');//titel,msg,icone
+	           		}
 	        	  });
 	          } else {
-	            swal("Cancelled", "Not Delete)", "error");
-	          }
+	        $rootScope.swal('Cancelled',"Not Delete)",'error');//titel,msg,icone
+           }
 	        });
  }
 	
@@ -435,6 +432,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		$http.post($rootScope.baseUrl+'Booking/getCustomerDetails',$scope.data)
 		  .then(function(response) {
 			  $scope.docForGust = response.data;
+			   //$scope.regreshImg();
 		  }); 
 	}
 	
@@ -493,13 +491,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		$http.post($rootScope.baseUrl+'Booking/saveGustDetails',$scope.data)
 	        	  .then(function(response) {
 	        	    document.getElementById('closedforGust').click();
-	        	    	swal({
-	              title: 'Success!',
-	              text: 'Aginest booking Id is :'+bookingId+', Gust Added Succesfully.',
-	              icon: 'success'
-	            }).then(function() {
-					
-				});
+	        	    $rootScope.swal('Success','Aginest booking Id is :'+bookingId+', Gust Added Succesfully.','success');//titel,msg,icone
 	        	  });
 		
 		//alert(JSON.stringify($scope.gustDetails));
@@ -558,14 +550,7 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	        	  .then(function(response) {
 	        	    if(response.data>0){
 	        	    	document.getElementById('closed').click();
-	        	    	swal({
-	              title: 'Success!',
-	              text: 'Aginest booking Id is :'+bookingId+', Payment Succesfully Done! Payment Id is-'+response.data,
-	              icon: 'success'
-	            }).then(function() {
-					
-					//$scope.paymentDetails[0].total_amount = $scope.paymentDetails[0].total_amount;
-	            });
+	        	    	$rootScope.swal('Success','Aginest booking Id is :'+bookingId+', Payment Succesfully Done! Payment Id is-'+response.data,'success');//titel,msg,icone
 	        		}
 	        	  });
  }
@@ -585,7 +570,6 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	$scope.dateValidation = function(){
 		var start_date = $scope.form1.start_date;
 		$scope.form1.end_date_v = $scope.form1.end_date_v.setDate(start_date.getDate() + 1); 
-		//$scope.getRoom();
 	}
     $scope.getRoom = function (){
     	$scope.weekendFlg = false;
@@ -593,8 +577,6 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		var edt = $scope.form1.end_date;
 		var start_date = $filter('date')(sdt, "yyyy-MM-dd");
 		var end_date = $filter('date')(edt, "yyyy-MM-dd");
-    	//alert("start_date=="+start_date+" == end_date =="+end_date);
-		//return false;
     	$scope.data = {
     			'start_date':start_date,
     			'end_date':end_date
@@ -718,13 +700,8 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 			Obj.m_no == undefined ||  
 			Obj.roomId == "" || Obj.name == "" || Obj.gender == "" || Obj.age== "" || 
 			Obj.email == "" || Obj.m_no== ""){
-	    	swal({
-	              title: 'Required Error!',
-	              text: 'Please provied all field.',
-	              icon: 'error'
-	            }).then(function() {
-	            });
-				return true;
+			$rootScope.swal('Required Error!','Please provied all field.','error');//titel,msg,icone
+			return true;
 	}
 	}
 
@@ -744,39 +721,11 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		   	$scope.bookingflg = true;
 			$scope.bookingId = responces.data.booking_id;
 			 $scope.addPayment($scope.bookingId);
-		   swal({
-	              title: 'Success!',
-	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
-	              icon: 'success'
-	            }).then(function() {
-					//$scope.form1 = {};
-					//$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
-	            });
+			 $rootScope.swal('Success','Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,'success');//titel,msg,icone
 		   }
 	   
 	  });
 	  return false;
-	/*
-		$http({
-		  method  : 'POST',
-		  url     : $rootScope.baseUrl+'Booking/upload',
-		  processData: false,  
-		  data : $scope.form1,
-		  headers: {
-		         'Content-Type': undefined
-		  }
-	   }).then(function(responces){
-		   if(responces.data.customer_id>0){
-		   swal({
-	              title: 'Success!',
-	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
-	              icon: 'success'
-	            }).then(function() {
-					$scope.form1 = {};
-					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
-	            });
-		   }
-	   });*/
 	}
     $scope.saveDocuments = function (bookingId,file){
 
@@ -797,34 +746,104 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
     				}
     					fd.append('file[]', $scope.docForGust[i].picFile);
     				}
-
-    			
-
     				$http({
                         url: $rootScope.baseUrl+'Booking/uploaddocuments',//or your add enquiry services
                         method: "POST",
 						 headers: { 'Content-Type': undefined },
 						 data :fd		 
-                    }).success(function(data, status, headers, config) {
-                       $scope.status=data.status;
+                    }).then(function(data, status, headers, config) {
+                       $scope.status=data.data.status;
 						 if($scope.status==1)
 						 {
-						 	 alert(data.message);
+						 	document.getElementById('adddoc').click();
+						   $rootScope.swal('Success',data.data.message,'success');//titel,msg,icone
 						   $scope.formdata="";
-						   $scope.myform.$setPristine();//for flush all the validation errors/messages previously
-						  
+
+						   //$scope.myform.$setPristine();//for flush all the validation errors/messages previously
 						 }
 						 else
 						 {
-						  alert(data.message);
+						 	$rootScope.swal('Error',data.data.message,'error');//titel,msg,icone
 						 }
                          
-                    }).error(function(data, status, headers, config) {
-                         alert("Something Error in form process");
                     });
 
 	}
 	
+	$scope.regreshImg = function(){
+		for(var i=1;i<=$scope.docForGust.length;i++){
+		document.getElementById('img_'+i).src = $rootScope.baseUrl+'bower_components/CustomarImage/'+$scope.docForGust[i-1].image_id+'.jpg?cb='+new Date().getTime();
+		}		
+	}
+
+	//check out function start here
+
+	$scope.checkout = function(bookingId){
+
+		$scope.data ={"bookingId":bookingId};
+		 /* $http.post($rootScope.baseUrl+'Booking/exsistPaymentDetails',$scope.data)
+	        	  .then(function(response) {
+					  if(response.data>0){
+						  $scope.exsistFlag = true;
+					  }else{
+						  $scope.exsistFlag = false;
+					  }
+	        	    
+	        	  });*/
+		  $http.post($rootScope.baseUrl+'Booking/getPaymentDetails',$scope.data)
+	        	  .then(function(response) {
+	        	    $scope.paymentDetails_all = response.data;
+	        	    $scope.total_amount_dr=0;
+	        	    for(var i=0;i<$scope.paymentDetails_all.length;i++){
+	        	    		$scope.total_amount_dr+=Number($scope.paymentDetails_all[i].total_amount);
+	        	    }
+	        	  });
+
+	      $http.post($rootScope.baseUrl+'Booking/getBookingPaymentDetails',$scope.data)
+	        	  .then(function(response) {
+	        	    $scope.paymentDetails = response.data;
+	        	    $scope.total_amount_cr=0;
+	        	    for(var i=0;i<$scope.paymentDetails.length;i++){
+	        	    		$scope.total_amount_cr+=Number($scope.paymentDetails[i].total_amount);
+	        	    }
+					//$scope.ss.payment_amount = $scope.paymentDetails[0].total_amount;
+	        	  });
+	} 
+
+	$scope.paymentandCheckout =function(bookingId,flg){
+
+		if(Number($scope.total_amount_cr-$scope.total_amount_dr)==$scope.total_amount){
+			var data = {
+			"total_amount": $scope.total_amount,
+			"payment_mode" : $scope.payment_mode,
+			"tran_id" : $scope.tran_id,
+			"feedback":$scope.feedback,
+			"flg" : flg,
+			"booking_id": bookingId
+		};
+
+
+		$http.post($rootScope.baseUrl+'Booking/paymentandCheckout',data)
+	        	  .then(function(response) {
+	        	   if(response.data!='false'){
+	        	   	alert("checkout Succesfully Done");
+	        	   }else{
+	        	   	alert("checkout date is diffrent please update your date");
+	        	   }
+	        	  });
+
+
+		//alert(JSON.stringify(data));
+	}else{
+		if(Number($scope.total_amount_cr-$scope.total_amount_dr)==0){
+			alert("Your payment alredy completed");
+		}else{
+			alert("Please provied the amount of ="+Number($scope.total_amount_cr-$scope.total_amount_dr));
+		}
+	}
+   }
+
+// check out function end here 
 
 	
 	$scope.submit = function(bookingId) {
@@ -836,11 +855,21 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 	        	  .then(function(response) {
 					  document.getElementById('closedforGust').click();
 					  var flg ="";
+					  if(response.data==-1){
+					  	swal({
+				              title: 'Error!',
+				              text: 'Booking not excepted.',
+				              icon: 'warning'
+				            }).then(function() {
+							});
+							return false;
+					  }
 					  if(response.data==1){
 						  flg = "Check In";
 					  }else{
 						  flg ="Advance Booking";
 					  }
+					  
 	        	  swal({
 	              title: 'Success!',
 	              text: flg+' Succesfully Done.',
@@ -849,59 +878,10 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 					
 				});
 	        	  });
-		//alert(JSON.stringify($scope.form1));
-		//return false;
-		
-		/*if($scope.bookingValidation($scope.form1)){
-			return false ;
-		}
-		if($scope.form1.id ==undefined || $scope.form1.id ==""){
-			$scope.form1.id = 0;
-		}
-      	$scope.form.image = $scope.files[0];
-      	$http({
-		  method  : 'POST',
-		  url     : $rootScope.baseUrl+'Booking/upload',
-		  processData: false,
-		  transformRequest: function (data) {
-		      var formData = new FormData();
-			  formData.append("image", $scope.form.image);
-		      formData.append("data", JSON.stringify($scope.form1));  
-		      return formData;  
-		  },  
-		  data : $scope.form,
-		  headers: {
-		         'Content-Type': undefined
-		  }
-	   }).then(function(responces){
-		   if(responces.data.customer_id>0){
-		   swal({
-	              title: 'Success!',
-	              text: 'Customer Id is :'+responces.data.customer_id+', Booking Succesfully Done! Booking Id is-'+responces.data.booking_id,
-	              icon: 'success'
-	            }).then(function() {
-					$scope.form1 = {};
-					$scope.image_source=$rootScope.baseUrl+'bower_components/CustomarImage/0.jpg';
-	            });
-		   }
-	   });
-		*/
 
       };
 
-	 $scope.uploadedFile = function(element) {
-			
-		    $scope.currentFile = element.files[0];
-		    var reader = new FileReader();
-		    reader.onload = function(event) {
-		      $scope.image_source = event.target.result
-		      $scope.$apply(function($scope) {
-		        $scope.files.push(element.files);
-		      });
-		    }
-                 reader.readAsDataURL(element.files[0]);
-		  }
-	
+
 	
 });
 
@@ -922,7 +902,6 @@ app.controller('RoomCustomerBookingController', function(dataFactory,$scope,$htt
 	}
 
 	$scope.getBookingDetailss =function(ss){
-		//alert(JSON.stringify(ss));
 		$rootScope.bookingDetailsObj = ss;
 		$rootScope.roomEditFlg=true;
 		window.location.href = $rootScope.baseUrl+'Common/home#!/ComplitedBooking/1';
