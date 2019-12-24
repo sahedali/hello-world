@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2019 at 10:00 PM
+-- Generation Time: Dec 24, 2019 at 05:23 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.1.33
 
@@ -100,7 +100,8 @@ INSERT INTO `booking` (`id`, `customer_id`, `booking_number`, `start_date`, `end
 (3, 2, '1911193', '2019-12-12 19:54:29', '2019-12-15 19:56:32', 48, 'Suite Double', 302, 1000.00, 2, '0000-00-00', 1, '0000-00-00', 1, 1),
 (4, 2, '2211194', '2019-11-22 22:14:56', '2019-11-27 22:14:56', 53, 'Family Suite 4', 101, 2400.00, 1, '0000-00-00', 1, '0000-00-00', 1, 1),
 (5, 3, '2411195', '2019-11-24 09:17:48', '2019-11-26 22:52:59', 54, 'Family Suite 4', 102, 2400.00, 1, '0000-00-00', 1, '0000-00-00', 1, 1),
-(6, 3, '0112196', '2019-12-01 22:19:57', '2019-12-05 22:19:57', 53, 'Family Suite 4', 101, 2400.00, 1, '0000-00-00', 1, '0000-00-00', 1, 1);
+(6, 3, '0112196', '2019-12-01 22:19:57', '2019-12-05 22:19:57', 53, 'Family Suite 4', 101, 2400.00, 1, '0000-00-00', 1, '0000-00-00', 1, 1),
+(7, 4, '0812197', '2019-12-08 01:57:20', '2019-12-09 02:03:38', 53, 'Family Suite 4', 101, 2400.00, 1, '0000-00-00', 1, '0000-00-00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -131,7 +132,8 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`id`, `name`, `age`, `gender`, `email_id`, `ph_number`, `id_type`, `id_value`, `created_on`, `created_by`, `modified_on`, `modified_by`, `is_active`) VALUES
 (1, 'Sahed Ali', 23, 'Male', 'sahedali51@gmail.com', '8609024837', 1, '23457', '0000-00-00', 1, '0000-00-00', 1, 1),
 (2, 'Sahed', 23, 'Male', 'sahedali51@gmail.com', '8609024873', 0, '0', '0000-00-00', 1, '0000-00-00', 1, 1),
-(3, 'Avik', 23, 'Male', 'abc@gmail.com', '1234567890', 2, '222', '0000-00-00', 1, '0000-00-00', 1, 1);
+(3, 'Avik', 23, 'Male', 'abc@gmail.com', '1234567890', 2, '222', '0000-00-00', 1, '0000-00-00', 1, 1),
+(4, 'Sahed', 25, 'Male', 'sahedali51@gmail.com', '809024873', 1, '12345', '0000-00-00', 1, '0000-00-00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -167,7 +169,10 @@ INSERT INTO `customer_gust` (`id`, `booking_id`, `name`, `age`, `gender`, `id_ty
 (12, 2, 'assssff', 24, 'FeMale', 4, '2222', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
 (13, 5, 'dddd', 30, 'Male', 4, '777', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
 (14, 6, 'aaa', 23, 'Male', 4, '333', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
-(15, 6, 'cc', 24, 'Male', 5, '777', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
+(15, 6, 'cc', 24, 'Male', 5, '777', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(16, 6, 'ddd', 35, 'Male', 0, '', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(17, 7, 'mota', 34, 'Male', 2, '33333', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(18, 7, 'mota wife', 30, 'FeMale', 1, '4444', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -273,7 +278,9 @@ INSERT INTO `payment` (`payment_id`, `booking_id`, `payment_amount`, `ledger_id`
 (3, 5, '550.89', 1, '2019-11-27 16:01:45', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
 (4, 6, '2000.00', 1, '2019-12-01 16:50:53', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
 (5, 6, '2000.00', 1, '2019-12-01 16:50:57', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
-(6, 6, '600.00', 1, '2019-12-01 16:55:38', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
+(6, 6, '600.00', 1, '2019-12-01 16:55:38', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(7, 7, '2000.00', 1, '2019-12-07 20:30:29', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1),
+(8, 7, '1000.00', 1, '2019-12-07 20:31:45', 1, '0000-00-00 00:00:00', 1, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -303,6 +310,28 @@ INSERT INTO `price_detail` (`id`, `category_id`, `amount`, `start_date`, `end_da
 (4, 6, 2500.00, '2019-11-01', '2020-01-31', '0000-00-00', 1, '0000-00-00', 1, 1),
 (5, 3, 2400.00, '2019-09-01', '2019-12-31', '0000-00-00', 1, '0000-00-00', 1, 1),
 (6, 1, 6000.00, '2019-09-01', '2019-10-31', '0000-00-00', 1, '0000-00-00', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restruent_table`
+--
+
+CREATE TABLE `restruent_table` (
+  `id` int(11) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `no_of_chair` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `restruent_table`
+--
+
+INSERT INTO `restruent_table` (`id`, `name`, `no_of_chair`, `active`) VALUES
+(1, 'T1', 2, 1),
+(2, 'T2', 6, 1),
+(3, 'T3', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -354,7 +383,12 @@ INSERT INTO `room_category_master` (`id`, `name`, `week_days_price`, `weekend_pr
 (4, 'Super Delux Double', 1000.00, 1200.00, 'xyz', '0000-00-00', 1, '0000-00-00', 1, 1),
 (6, 'Suite 3', 20.00, 30.00, 'l5', '0000-00-00', 1, '0000-00-00', 1, 1),
 (11, 'Super Deluxe', 40.00, 60.00, 'sfsdf', '0000-00-00', 1, '0000-00-00', 1, 1),
-(12, 'Deluxe', 123.00, 321.00, 'hasjkfhkjshdf', '0000-00-00', 1, '0000-00-00', 1, 1);
+(12, 'Deluxe', 123.00, 321.00, 'hasjkfhkjshdf', '0000-00-00', 1, '0000-00-00', 1, 1),
+(17, 'test1', 12.00, 22.00, 'test1', '0000-00-00', 1, '0000-00-00', 1, 1),
+(18, 'test2', 234.00, 243.00, 'test2', '0000-00-00', 1, '0000-00-00', 1, 1),
+(19, 'test3', 234.00, 333.00, 'test3', '0000-00-00', 1, '0000-00-00', 1, 1),
+(20, 'test5', 100.00, 200.00, 'test5', '0000-00-00', 1, '0000-00-00', 1, 1),
+(21, 'test20', 234.00, 543.00, 'test20', '0000-00-00', 1, '0000-00-00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -398,7 +432,12 @@ INSERT INTO `room_master` (`id`, `room_number`, `room_category_id`, `created_on`
 (56, 111, 6, '0000-00-00', 1, '0000-00-00', 1, 1),
 (57, 112, 6, '0000-00-00', 1, '0000-00-00', 1, 1),
 (58, 113, 6, '0000-00-00', 1, '0000-00-00', 1, 1),
-(59, 220, 6, '0000-00-00', 1, '0000-00-00', 1, 1);
+(59, 220, 6, '0000-00-00', 1, '0000-00-00', 1, 1),
+(64, 223, 17, '0000-00-00', 1, '0000-00-00', 1, 1),
+(65, 33, 18, '0000-00-00', 1, '0000-00-00', 1, 1),
+(66, 444, 19, '0000-00-00', 1, '0000-00-00', 1, 1),
+(67, 3434, 20, '0000-00-00', 1, '0000-00-00', 1, 1),
+(68, 2345, 21, '0000-00-00', 1, '0000-00-00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -493,6 +532,12 @@ ALTER TABLE `price_detail`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `restruent_table`
+--
+ALTER TABLE `restruent_table`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `role_master`
 --
 ALTER TABLE `role_master`
@@ -536,19 +581,19 @@ ALTER TABLE `account_type`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `customer_gust`
 --
 ALTER TABLE `customer_gust`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `employee`
@@ -572,13 +617,19 @@ ALTER TABLE `id_master`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `price_detail`
 --
 ALTER TABLE `price_detail`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `restruent_table`
+--
+ALTER TABLE `restruent_table`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `role_master`
@@ -590,13 +641,13 @@ ALTER TABLE `role_master`
 -- AUTO_INCREMENT for table `room_category_master`
 --
 ALTER TABLE `room_category_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `room_master`
 --
 ALTER TABLE `room_master`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `user`
