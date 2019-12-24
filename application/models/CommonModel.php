@@ -449,15 +449,15 @@ class CommonModel extends CI_Model {
 				'id_value'=>$dt->idValue,
 			);
 			$this->db->where('id', $dt->customer_id);
-
+			$path =FCPATH."bower_components\\CustomarImage\\customer\\";
 			if($dt->flgofhead==0){ // gust 
 			$this->db->update('customer_gust',$tableData);
+			$path =FCPATH."bower_components\\CustomarImage\\gust\\";
 		    }
 			else{
 			$this->db->update('customer',$tableData);
 			}
             $image = $dt->customer_id.'.jpg';
-            $path =FCPATH."bower_components\\CustomarImage\\";
             $flg=move_uploaded_file($images["tmp_name"][$i], $path.$image); 
             $i++;
 		}

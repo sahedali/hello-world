@@ -31,9 +31,9 @@
                           
 				</table> 
 				</div>
-				<!--div data-pagination="" data-num-pages="numOfPages()" 
+				<div data-pagination="" data-num-pages="numOfPages()" 
       data-current-page="curPage" data-max-size="maxSize"  
-      data-boundary-links="true"></div-->
+      data-boundary-links="true"></div>
 				
 				
 			</div>

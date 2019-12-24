@@ -8,7 +8,7 @@
 		data-target="#exampleModal" data-ng-click="addRoom()"> </a> </h5>
 				</div>
 				<div class="table-responsive bs-example widget-shadow">
-				 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+				 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" style="font-size: 13px">
 					<thead>
                       <tr>
                           <th class="th-sm">Room Number</th>
@@ -25,6 +25,9 @@
                           
 				</table> 
 				</div>
+				<div data-pagination="" data-num-pages="numOfPages()" 
+      data-current-page="curPage" data-max-size="maxSize"  
+      data-boundary-links="true"></div>
 			</div>
 		</div>
 	</div>

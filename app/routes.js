@@ -27,6 +27,10 @@ app.config(['$routeProvider',function($routeProvider,$locationProvider){
 	})
 	.when('/editBookind/:bk',{
 		templateUrl :'../app/View/Booking/EditBookind.php'
+	}).when('/ResturentMasterTable',{
+		templateUrl : '../app/view/Resturent/table.php'
+	}).when('/ResturentTableBooking',{
+		templateUrl : '../app/view/Resturent/tableBooking.php'
 	})
 	/*.when('/ComplitedBooking',{
 		templateUrl :'../app/View/Booking/PaymentBooking.php'
@@ -42,4 +46,10 @@ app.run(function($rootScope) {
 	            }).then(function() {
 	            });
 }
+
+ $rootScope.paging= function(data){
+	
+}
+
+
 });

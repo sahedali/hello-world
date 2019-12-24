@@ -4,9 +4,24 @@ app.controller('RoomController', function(dataFactory,$scope,$http,$rootScope,$r
 	
 	
 	$scope.init = function(){
+		$scope.curPage = 1,
+		$scope.itemsPerPage = 10,
+		$scope.maxSize = 5;
 	$http.get($rootScope.baseUrl+'Room/getRoomDetails')
 		  .then(function(response) {
-		    $scope.roomDetails = response.data;
+
+		
+	
+	    $scope.roomDetails = response.data;
+	    $scope.numOfPages = function () {
+		    return Math.ceil($scope.roomDetails.length / $scope.itemsPerPage);
+		  };
+		    $scope.$watch('curPage + numPerPage', function() {
+		    var begin = (($scope.curPage - 1) * $scope.itemsPerPage),
+		    end = begin + $scope.itemsPerPage;
+		    $scope.roomDetails = $scope.roomDetails.slice(begin, end);
+		  });
+	 	 
 		  });
 	$http.get($rootScope.baseUrl+'Room/getCategoryDetails')
 	  .then(function(response) {
@@ -117,26 +132,20 @@ app.controller('RoomController', function(dataFactory,$scope,$http,$rootScope,$r
 app.controller('RoomCategoryController', function($scope,$http,$rootScope){
 	$scope.init = function(){
 		
-		$scope.curPage = 1,
+		  $scope.curPage = 1,
 		  $scope.itemsPerPage = 10,
 		  $scope.maxSize = 5;
-		//this.items = $scope.CategoryDetails;
-		//$scope.CategoryDetails =[];
 	$http.get($rootScope.baseUrl+'Room/getCategoryDetails')
 	  .then(function(response) {
 	    $scope.CategoryDetails = response.data;
-	    
 	    $scope.numOfPages = function () {
 		    return Math.ceil($scope.CategoryDetails.length / $scope.itemsPerPage);
-		    
 		  };
 		    $scope.$watch('curPage + numPerPage', function() {
 		    var begin = (($scope.curPage - 1) * $scope.itemsPerPage),
 		    end = begin + $scope.itemsPerPage;
 		    $scope.CategoryDetailss = $scope.CategoryDetails.slice(begin, end);
 		  });
-		    
-	   // $scope.CategoryDetailss = $scope.CategoryDetails;
 	  });
 	
 	  
@@ -432,6 +441,39 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 		$http.post($rootScope.baseUrl+'Booking/getCustomerDetails',$scope.data)
 		  .then(function(response) {
 			  $scope.docForGust = response.data;
+			 
+			var docDetails = [];
+			  for(var i=0 ; i<$scope.docForGust.length;i++){
+			  	var obj = {};
+
+			  	if($scope.docForGust[i].flgofhead==0){
+			  		obj = {
+			  		age: $scope.docForGust[i].age,
+					customer_id: $scope.docForGust[i].customer_id,
+					flgofhead: $scope.docForGust[i].flgofhead,
+					gender:  $scope.docForGust[i].gender,
+					idType1: $scope.docForGust[i].idType1,
+					idValue: $scope.docForGust[i].idValue,
+					image_id: $rootScope.baseUrl+'bower_components/CustomarImage/gust/'+$scope.docForGust[i].image_id+'.jpg?cb='+new Date().getTime(),
+					name: $scope.docForGust[i].name
+			  	};
+			  	}else{
+			  		obj = {
+			  		age: $scope.docForGust[i].age,
+					customer_id: $scope.docForGust[i].customer_id,
+					flgofhead: $scope.docForGust[i].flgofhead,
+					gender:  $scope.docForGust[i].gender,
+					idType1: $scope.docForGust[i].idType1,
+					idValue: $scope.docForGust[i].idValue,
+					image_id: $rootScope.baseUrl+'bower_components/CustomarImage/customer/'+$scope.docForGust[i].image_id+'.jpg?cb='+new Date().getTime(),
+					name: $scope.docForGust[i].name
+			  	};
+			  	}
+			  	 
+			  	docDetails.push(obj);
+			  }
+
+			 $scope.docForGust =docDetails;
 			   //$scope.regreshImg();
 		  }); 
 	}
@@ -770,11 +812,11 @@ app.controller('BookingController', function($rootScope,$scope,$http,$filter,$ro
 
 	}
 	
-	$scope.regreshImg = function(){
+	/*$scope.regreshImg = function(){
 		for(var i=1;i<=$scope.docForGust.length;i++){
 		document.getElementById('img_'+i).src = $rootScope.baseUrl+'bower_components/CustomarImage/'+$scope.docForGust[i-1].image_id+'.jpg?cb='+new Date().getTime();
 		}		
-	}
+	}*/
 
 	//check out function start here
 

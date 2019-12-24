@@ -9,7 +9,7 @@
 				</div>
 				<div class="table-responsive bs-example widget-shadow">
 				 <table id="dtBasicExample" class="table table-striped table-bordered table-sm"
-				  cellspacing="0" width="100%">
+				  cellspacing="0" width="100%" style="font-size: 13px">
 					<thead>
                       <tr><th class="th-sm">Sl No</th>
                           <th class="th-sm">Category</th>

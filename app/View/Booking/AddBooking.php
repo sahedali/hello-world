@@ -76,9 +76,6 @@
 								<input type="text" class="form-control1" ng-disabled="roomEditFlg"
 								data-ng-model="form1.m_no" ng-change="searchformobile()" ng-Trim="false"
 								placeholder="Enter Mobile No">
-								
-								
-								
 								</div>
 						</div>
 					</div>  
@@ -443,7 +440,7 @@
 								  <th class="th-sm">Id Type</th>
 								  <th class="th-sm">Id Value</th>
 								  <th class="th-sm">Documents</th>
-								  <th class="th-sm">view<a ng-click="regreshImg()"> Refresh</a></th>
+								  <th class="th-sm">view</th>
 							  </tr>
 							 </thead>
 							 <tbody>
@@ -463,8 +460,8 @@
 								 <input type="file" ngf-select ng-model="form.picFile" name="file" accept="image/*" ngf-max-size="2MB" required> <i ng-show="myForm.file.$error.required">*required</i>
                                 <img ngf-thumbnail="form.picFile" class="thumb" style="width:100px;">
                                 </td>
-                                <td> <a  href="{{baseUrl + 'bower_components/CustomarImage/'+ form.image_id+'.jpg'+'?cb=' + $index}}" target="_blank" >
-                                	<img ng-src="{{baseUrl + 'bower_components/CustomarImage/'+ form.image_id+'.jpg' +'?cb=' + $index}}" id="img_{{$index+1}}" style="width:100px;">
+                                <td> <a  href="{{form.image_id}}" target="_blank" >
+                                	<img ng-src="{{form.image_id}}" style="width:100px;">
                                 </a>
                                 </td>
 								 
